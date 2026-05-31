@@ -1,0 +1,38 @@
+\section{Introducción}
+Al estudiar las galaxias se observa un comportamiento
+
+Ésta es la plantilla para escribir en \LaTeX\ los TFM de Física. En ella basta rellenar los nombres de la portada y las diferentes secciones. El índice se produce automáticamente. No debe alterarse el formato. Si el trabajo se escribe en inglés conviene descomentar en el encabezamiento del fichero {\sf tfg.tex} las líneas que aparecen bajo:
+\begin{verbatim}
+% TFG en inglés:
+%\usepackage[english]{babel} 
+%\addto\captionsenglish{\renewcommand{\chaptername}{}}
+\end{verbatim}
+y comentar las que aparecen bajo:
+\begin{verbatim}
+% TFG en español:
+\usepackage[spanish,es-nodecimaldot,es-tabla,es-lcroman,es-nosectiondot,
+            es-noindentfirst]{babel}
+\renewcommand\spanishchaptername{}
+\end{verbatim}
+
+Las figuras y las tablas son objetos \autocite{jimenez-tejaFirstJointMUSE2024} flotantes, pero si se desea puede forzarse su localización en la página, como se ha hecho con la siguiente figura \autocite{popGalaxiesShellsIllustris2017,popFormationIncidenceShell2018,jimenez-tejaFirstJointMUSE2024}:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=8cm]{fig.png}				
+\caption{Si no es de elaboración propia, debe especificarse la fuente \autocite{jimenez-tejaFirstJointMUSE2024}. \label{figura1}}
+\end{figure}
+\noindent
+
+Ecuaciones:
+
+\begin{equation}
+x^2 + y^2 = 9
+\end{equation}
+
+El paginado y las nombres de las secciones aparecen automáticamente en la parte superior \autocite{popFormationIncidenceShell2018} de cada página. 
+
+Si se desea reproducir este formato con otro procesador de textos: la fuente es Times \autocite{popGalaxiesShellsIllustris2017} New Roman 12pt y los márgenes son 2.88 cm (superior), 2.97 cm (inferior), 2.6 cm (izquierdo y derecho). El espaciado interlineal es 1.25
+
+El trabajo debe  tener  una  extensión  máxima  de  50  páginas
+incluyendo  gráficas,  imágenes,   anexos y referencias. 

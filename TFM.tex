@@ -1,0 +1,221 @@
+\documentclass[12pt,a4paper,twoside,pdf]{article}
+
+% Paquetes 
+\usepackage{latexsym}
+\usepackage[utf8x]{inputenc}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{marvosym}
+\usepackage{epsfig}
+\usepackage{graphics}
+\usepackage{amsfonts}
+\usepackage{xspace}
+\usepackage{color}
+\usepackage{booktabs}
+\usepackage{xtab}
+\usepackage[colorlinks=true,urlcolor=blue,linkcolor=blue,citecolor=blue]{hyperref}
+\numberwithin{equation}{section}
+
+% Fuente: Times New Roman
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+%\usepackage[sc]{mathpazo}
+%\linespread{1.05}
+
+% TFM en inglés:
+%\usepackage[english]{babel} 
+%\addto\captionsenglish{\renewcommand{\chaptername}{}}
+
+% TFM en español:
+\usepackage[spanish,es-nodecimaldot,es-tabla,es-lcroman,es-nosectiondot,
+            es-noindentfirst]{babel}
+\renewcommand\spanishchaptername{}
+\renewcommand{\baselinestretch}{1.25}
+
+
+
+% Formato de la página:
+\usepackage{fancyhdr}
+\usepackage[top=2.88cm,bottom=2.97cm,left=2.6cm,right=2.6cm]{geometry}
+\setlength{\parskip}{0.1cm}
+
+% Pon aquí tus definiciones:
+
+\newcommand{\dis}{\displaystyle}
+\usepackage[sorting=none, giveninits=true, maxbibnames=4]{biblatex}
+\addbibresource{capitulos/artsintroduccion.bib}
+%\addbibresource{capitulos/artsintroduccion2.bib}
+
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {title}{\mkbibitalic{#1\isdot}}
+
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {volume}{\mkbibbold{#1\isdot}}
+
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {year}{(#1\isdot)}
+
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {doi}{[DOI: \href{https://doi.org/#1}{#1}\isdot]}
+
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {pages}{#1\isdot}
+
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {journaltitle}{#1\isdot}
+
+\renewcommand*{\newunitpunct}{\addcomma \\}
+\renewcommand*{\newblockpunct}{\space}
+
+\AtEveryBibitem{%
+  \clearfield{issn}%
+  \clearfield{url}%
+  \clearfield{urldate}%
+}
+
+\renewbibmacro{in:}{}
+
+\setlength{\bibhang}{0pt}
+\defbibenvironment{bibliography}
+  {\list
+     {}
+     {\setlength{\leftmargin}{35pt}%{\bibhang}%
+      \setlength{\itemindent}{-20pt}%
+      \setlength{\itemsep}{\bibitemsep}%
+      \setlength{\parsep}{\bibparsep}}}
+  {\endlist}
+  {\item
+   \printtext[labelnumberwidth]{%
+     \printfield{labelprefix}%
+      \printfield{labelnumber}}%
+   \hspace{5pt}}
+
+\DeclareBibliographyDriver{article}{%
+  \printnames{author}%
+  \newunit%\newblock
+  \printfield{title}%
+  \newunit%\newblock
+  \printfield{shortjournal}%
+  \iffieldundef{shortjournal}
+    {\printfield{journaltitle}}%                             
+    {}% 
+  \newblock
+  \printfield{volume}%
+  \newblock
+  \printfield{year}%
+  \newblock
+  \printfield{pages}
+  %\newblock
+  \printfield{doi}
+  \finentry}
+
+%\setlength{\bibhang}{1.5em}
+%\setlength{\bibleftmargin}{1cm}
+
+\begin{document}
+
+% Portada %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{empty}
+\begin{center}
+
+{\large Trabajo Fin de M\'aster}
+
+\bigskip
+\bigskip
+
+{\bf\Huge Análisis morfológico y químico de las "shells" del cúmulo de galaxias
+RXJ2129.7+0005}
+
+{\Large Daniel Pérez Curros}
+
+%{\large Universidad de Granada}
+
+Julio de 2026
+
+\bigskip
+
+\includegraphics[width=6cm]{escudoUGRnew.jpg}				
+
+\bigskip
+\bigskip
+
+{\large Tutor: Yolanda Jiménez Teja}
+
+{\it  Departamento ...}
+
+{\it  Universidad ...}
+
+{Firma Tutor:}
+
+\bigskip
+\bigskip
+
+{\bf Resumen} % Elige según idioma
+%{\bf Abstract} % Elige según idioma
+
+\bigskip
+
+\begin{minipage}{0.8\linewidth}
+
+  Resumen en espa\~nol, con una extensi\'on m\'axima de 500 palabras y con cinco palabras clave al final. 
+
+\end{minipage}
+
+\end{center}
+
+% Indice %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\tableofcontents
+
+% Texto %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\pagestyle{fancy}
+\fancyhead[RO,LE]{\leftmark}
+\fancyhead[LO,RE]{\thepage}
+\fancyfoot{}
+
+\input{capitulos/introduccion}
+
+\section{Una sección}
+
+$\cdots$
+
+\subsection{Una subsección}
+
+$\cdots$
+
+\section{Conclusiones}
+
+Esta sección no debería faltar en todo TFM. Después van las referencias que pueden añadirse en la misma página o en una nueva. 
+
+% Referencias %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newpage
+
+\addcontentsline{toc}{section}{Referencias} % Elige según idioma
+%\addcontentsline{toc}{section}{References} % Elige según idioma
+
+%\begin{thebibliography}{100}
+
+%\bibitem{PYTHIA}
+%  T.~Sjostrand, S.~Mrenna and P.~Z.~Skands, \\
+%  {\em PYTHIA 6.4 Physics and Manual}, \\
+%  JHEP {\bf 0605} (2006) 026  [hep-ph/0603175].
+  
+%\end{thebibliography}
+
+%\newgeometry{left=7.5em,right=7.5em}
+\printbibliography
+
+
+
+\end{document}
