@@ -1,36 +1,22 @@
 \section{Introducción}
-Ésta es la plantilla para escribir en \LaTeX\ los TFM de Física. En ella basta rellenar los nombres de la portada y las diferentes secciones. El índice se produce automáticamente. No debe alterarse el formato. Si el trabajo se escribe en inglés conviene descomentar en el encabezamiento del fichero {\sf tfg.tex} las líneas que aparecen bajo:
-\begin{verbatim}
-% TFG en inglés:
-%\usepackage[english]{babel} 
-%\addto\captionsenglish{\renewcommand{\chaptername}{}}
-\end{verbatim}
-y comentar las que aparecen bajo:
-\begin{verbatim}
-% TFG en español:
-\usepackage[spanish,es-nodecimaldot,es-tabla,es-lcroman,es-nosectiondot,
-            es-noindentfirst]{babel}
-\renewcommand\spanishchaptername{}
-\end{verbatim}
+El modelo cosmológico estándar establece que las galaxias pueden aumentar su masa estelar a través del colapso gravitatorio del gas interestelar \autocite{chabrierGalacticStellarSubstellar2003} o acretando estrellas de otras galaxias \autocite{bullockTracingGalaxyFormation2005,popFormationIncidenceShell2018} \nota{frase muy copiada?}. Este último mecanismo, especialmente en sus versiones más violentas, suele dejar huella en forma de inhomogeneidades en el halo estelar. El resultado es la formación de varios tipos de subestructuras en el halo, que tienen diferentes características dependiendo de las condiciones en las que se produjo la interacción y el tiempo transcurrido desde entonces. Por lo tanto, el estudio de las regiones más tenues y alejadas del centro de las galaxias es fundamental para determinar su historial de formación.\par
 
-Las figuras y las tablas son objetos \autocite{jimenez-tejaFirstJointMUSE2024} flotantes, pero si se desea puede forzarse su localización en la página, como se ha hecho con la siguiente figura \autocite{popGalaxiesShellsIllustris2017,popFormationIncidenceShell2018,jimenez-tejaFirstJointMUSE2024}:
+Algunas de las mencionadas subestructuras que podemos encontrar son: las corrientes de marea, que forman órbitas irregulares alrededor de las galaxias \autocite{newbergIntroductionTidalStreams2016,martinez-delgadoDISCOVERYGIANTStelLAR2009}; los penachos \nota{desarrollar}; y las "shells" (capas) \nota{traducción?}, regiones curvas intercaladas en las que existe un exceso de densidad de estrellas. Podemos ver ejemplos de estas formaciones en la figura \ref{tidalfeats}. \par
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=8cm]{fig.png}				
-\caption{Si no es de elaboración propia, debe especificarse la fuente \autocite{jimenez-tejaFirstJointMUSE2024}. \label{figura1}}
+\includegraphics[trim={10 70 20 60}, clip, width=0.4\textwidth]{tidalstream.jpg}
+\includegraphics[trim={10 180 330 30}, clip, width=0.4\textwidth]{shells.jpeg}				
+\caption{\nota{escribir pie de figura} \autocite{martinez-delgadoDISCOVERYGIANTStelLAR2009} \autocite{popFormationIncidenceShell2018} \label{tidalfeats}}
 \end{figure}
 \noindent
 
-Ecuaciones:
+Este trabajo se centrará en el estudio de las shells del cúmulo relajado de galaxias \cluster, identificado en \autocite{jimenez-tejaFirstJointMUSE2024} como un lugar de alto interés para el análisis de estas estructuras. A lo largo de esta introducción, detallaremos los últimos avances en los modelos de formación de shells \nota{explicar lo que se va a hacer}
 
-\begin{equation}
-x^2 + y^2 = 9
-\end{equation}
+\subsection{Formación de shells. La simulación Illustris.}
+Las primeras observaciones de galaxias con shells se publicaron en el Atlas de galaxias peculiares de 1966 \autocite{arpAtlasPeculiarGalaxies1966}. En aquel momento, el bajo brillo superficial de estas estructuras impedía un análisis sistemático de sus propiedades. Años más tarde, la aplicación de técnicas de amplificación fotográfica en \autocite{malinCatalogEllipticalGalaxies1983} permitió la identificación de 137 galaxias elípticas con shells. Solamente 5 de ellas se encontraban en cúmulos, y la mayoría estaban aisladas o en grupos de pocas galaxias. De hecho, de entre las galaxias elípticas aisladas catalogadas incluidas en el estudio, las galaxias con shells representaban un 17\%, cifra muy superior a la alcanzada para los grupos más numerosos y los cúmulos. Estos resultados ya sugerían una de las condiciones necesarias para la formación y estabilidad de las shells: un ambiente frío y estable que no facilite la difusión de las estrellas en el halo. \par
 
-El paginado y las nombres de las secciones aparecen automáticamente en la parte superior \autocite{popFormationIncidenceShell2018} de cada página. 
+\nota{desarrollar con algunas de las observaciones de shells desde entonces, tampoco mucho}
 
-Si se desea reproducir este formato con otro procesador de textos: la fuente es Times \autocite{popGalaxiesShellsIllustris2017} New Roman 12pt y los márgenes son 2.88 cm (superior), 2.97 cm (inferior), 2.6 cm (izquierdo y derecho). El espaciado interlineal es 1.25
+Debido a que no podemos observar directamente la evolución del proceso de formación de una shell ni de ninguna otra \nota{tidal feature}, el uso de simulaciones es imprescindible para elaborar modelos y sugerir características en las que centrarse en los análisis de galaxias reales.
 
-El trabajo debe  tener  una  extensión  máxima  de  50  páginas
-incluyendo  gráficas,  imágenes,   anexos y referencias. 

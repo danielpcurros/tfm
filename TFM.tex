@@ -43,8 +43,8 @@
 % Pon aquí tus definiciones:
 
 \newcommand{\dis}{\displaystyle}
-\usepackage[sorting=none, giveninits=true, maxbibnames=4]{biblatex}
-\addbibresource{capitulos/artsintroduccion.bib}
+\usepackage[sorting=nyt, giveninits=true, maxbibnames=4]{biblatex}
+\addbibresource{capitulos/TFM.bib}
 %\addbibresource{capitulos/artsintroduccion2.bib}
 
 \DeclareFieldFormat
@@ -61,7 +61,7 @@
 
 \DeclareFieldFormat
   [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
-  {doi}{[DOI: \href{https://doi.org/#1}{#1}\isdot]}
+  {doi}{[doi:\href{https://doi.org/#1}{#1}\isdot]}
 
 \DeclareFieldFormat
   [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
@@ -70,6 +70,14 @@
 \DeclareFieldFormat
   [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
   {journaltitle}{#1\isdot}
+
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {booktitle}{#1\isdot}
+
+  \DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {publisher}{#1\isdot}
 
 \renewcommand*{\newunitpunct}{\addcomma \\}
 \renewcommand*{\newblockpunct}{\space}
@@ -116,8 +124,29 @@
   \printfield{doi}
   \finentry}
 
+\DeclareBibliographyDriver{incollection}{%
+  \printnames{author}%
+  \newunit%\newblock
+  \printfield{title}%
+  \newunit%\newblock
+  \printfield{booktitle}%
+  \newblock
+  \printfield{year}%
+  \newblock
+  \printfield{pages}
+  \newblock
+  \printfield{doi}
+  \finentry}
+
 %\setlength{\bibhang}{1.5em}
 %\setlength{\bibleftmargin}{1cm}
+
+\newcommand{\nota}[1]{\textbf{\textcolor{red}{(#1)}}}
+\newcommand{\cluster}{RXJ2129.7+0005}
+
+\setlength{\parindent}{0pt}
+
+%\usepackage{microtype}[protrusion=true]
 
 \begin{document}
 
@@ -183,6 +212,31 @@ Julio de 2026
 \fancyhead[RO,LE]{\leftmark}
 \fancyhead[LO,RE]{\thepage}
 \fancyfoot{}
+
+%Ésta es la plantilla para escribir en \LaTeX\ los TFM de Física. En ella basta rellenar los nombres de la portada y las diferentes secciones. El índice se produce automáticamente. No debe alterarse el formato. Si el trabajo se escribe en inglés conviene descomentar en el encabezamiento del fichero {\sf tfg.tex} las líneas que aparecen bajo:
+%\begin{verbatim}
+% TFG en inglés:
+%\usepackage[english]{babel} 
+%\addto\captionsenglish{\renewcommand{\chaptername}{}}
+%\end{verbatim}
+%y comentar las que aparecen bajo:
+%\begin{verbatim}
+% TFG en español:
+%\usepackage[spanish,es-nodecimaldot,es-tabla,es-lcroman,es-nosectiondot,
+%            es-noindentfirst]{babel}
+%\renewcommand\spanishchaptername{}
+%\end{verbatim}
+
+%Ecuaciones:
+
+%\begin{equation}
+%x^2 + y^2 = 9
+%\end{equation}
+
+%Si se desea reproducir este formato con otro procesador de textos: la fuente es Times New Roman 12pt y los márgenes son 2.88 cm (superior), 2.97 cm (inferior), 2.6 cm (izquierdo y derecho). El espaciado interlineal es 1.25
+
+%El trabajo debe  tener  una  extensión  máxima  de  50  páginas
+%incluyendo  gráficas,  imágenes,   anexos y referencias. 
 
 \input{capitulos/introduccion}
 
