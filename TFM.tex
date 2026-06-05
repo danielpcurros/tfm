@@ -2,7 +2,7 @@
 
 % Paquetes 
 \usepackage{latexsym}
-\usepackage[utf8x]{inputenc}
+%\usepackage[utf8x]{inputenc}
 \usepackage{array}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -43,7 +43,7 @@
 % Pon aquí tus definiciones:
 
 \newcommand{\dis}{\displaystyle}
-\usepackage[sorting=nyt, giveninits=true, maxbibnames=4]{biblatex}
+\usepackage[sorting=nyt, giveninits=true, maxbibnames=4, backend=biber]{biblatex}
 \addbibresource{capitulos/TFM.bib}
 %\addbibresource{capitulos/artsintroduccion2.bib}
 
@@ -143,10 +143,14 @@
 
 \newcommand{\nota}[1]{\textbf{\textcolor{red}{(#1)}}}
 \newcommand{\cluster}{RXJ2129.7+0005}
+\newcommand{\prof}[1]{\textbf{\textcolor[RGB]{0,140,0}{#1}}}
 
 \setlength{\parindent}{0pt}
 
-%\usepackage{microtype}[protrusion=true]
+\usepackage[style=mexican]{csquotes}
+%\usepackage{fontspec}
+%\usepackage{unicode-math}
+%\setmathfont{Latin Modern Math}
 
 \begin{document}
 
@@ -160,7 +164,7 @@
 \bigskip
 \bigskip
 
-{\bf\Huge Análisis morfológico y químico de las "shells" del cúmulo de galaxias
+{\bf\Huge Análisis morfológico y químico de las \enquote{shells} del cúmulo de galaxias
 RXJ2129.7+0005}
 
 {\Large Daniel Pérez Curros}
@@ -213,31 +217,6 @@ Julio de 2026
 \fancyhead[LO,RE]{\thepage}
 \fancyfoot{}
 
-%Ésta es la plantilla para escribir en \LaTeX\ los TFM de Física. En ella basta rellenar los nombres de la portada y las diferentes secciones. El índice se produce automáticamente. No debe alterarse el formato. Si el trabajo se escribe en inglés conviene descomentar en el encabezamiento del fichero {\sf tfg.tex} las líneas que aparecen bajo:
-%\begin{verbatim}
-% TFG en inglés:
-%\usepackage[english]{babel} 
-%\addto\captionsenglish{\renewcommand{\chaptername}{}}
-%\end{verbatim}
-%y comentar las que aparecen bajo:
-%\begin{verbatim}
-% TFG en español:
-%\usepackage[spanish,es-nodecimaldot,es-tabla,es-lcroman,es-nosectiondot,
-%            es-noindentfirst]{babel}
-%\renewcommand\spanishchaptername{}
-%\end{verbatim}
-
-%Ecuaciones:
-
-%\begin{equation}
-%x^2 + y^2 = 9
-%\end{equation}
-
-%Si se desea reproducir este formato con otro procesador de textos: la fuente es Times New Roman 12pt y los márgenes son 2.88 cm (superior), 2.97 cm (inferior), 2.6 cm (izquierdo y derecho). El espaciado interlineal es 1.25
-
-%El trabajo debe  tener  una  extensión  máxima  de  50  páginas
-%incluyendo  gráficas,  imágenes,   anexos y referencias. 
-
 \input{capitulos/introduccion}
 
 \section{Una sección}
@@ -252,24 +231,8 @@ $\cdots$
 
 Esta sección no debería faltar en todo TFM. Después van las referencias que pueden añadirse en la misma página o en una nueva. 
 
-% Referencias %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\newpage
-
-\addcontentsline{toc}{section}{Referencias} % Elige según idioma
-%\addcontentsline{toc}{section}{References} % Elige según idioma
-
-%\begin{thebibliography}{100}
-
-%\bibitem{PYTHIA}
-%  T.~Sjostrand, S.~Mrenna and P.~Z.~Skands, \\
-%  {\em PYTHIA 6.4 Physics and Manual}, \\
-%  JHEP {\bf 0605} (2006) 026  [hep-ph/0603175].
-  
-%\end{thebibliography}
-
-%\newgeometry{left=7.5em,right=7.5em}
 \printbibliography
 
-
+%4 {\(\lesssim\)} kpc {{R}} {\(\lesssim\)} 9 kpc arreglar al final
 
 \end{document}
