@@ -49,15 +49,15 @@
 
 \DeclareFieldFormat
   [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
-  {title}{\mkbibitalic{#1\isdot}}
+  {title}{#1\isdot}
 
 \DeclareFieldFormat
   [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
-  {volume}{\mkbibbold{#1\isdot}}
+  {volume}{\mkbibitalic{#1\isdot}}
 
 \DeclareFieldFormat
   [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
-  {year}{(#1\isdot)}
+  {year}{\mkbibbold{#1\isdot}}
 
 \DeclareFieldFormat
   [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
@@ -69,18 +69,22 @@
 
 \DeclareFieldFormat
   [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
-  {journaltitle}{#1\isdot}
+  {journaltitle}{\mkbibitalic{#1\isdot}}
 
 \DeclareFieldFormat
   [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
-  {booktitle}{#1\isdot}
+  {shortjournal}{\mkbibitalic{#1\isdot}}
+
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {booktitle}{En: \mkbibitalic{#1\isdot}}
 
 \DeclareFieldFormat[inbook,incollection]{publisher}{#1\isdot}
 
 \DeclareFieldFormat[online]{url}{[\href{#1}{#1}\isdot]}
 
-\renewcommand*{\newunitpunct}{\addcomma \\}
-\renewcommand*{\newblockpunct}{\space}
+\renewcommand*{\newunitpunct}{\addcomma \addspace}
+\renewcommand*{\newblockpunct}{\addperiod \addspace}
 
 %\AtEveryBibitem{%
 %  \clearfield{issn}%
@@ -107,34 +111,34 @@
 
 \DeclareBibliographyDriver{article}{%
   \printnames{author}%
-  \newunit%\newblock
+  \newblock
   \printfield{title}%
-  \newunit%\newblock
+  \newblock 
   \printfield{shortjournal}%
   \iffieldundef{shortjournal}
     {\printfield{journaltitle}}%                             
     {}% 
-  \newblock
-  \printfield{volume}%
-  \newblock
+  \addspace
   \printfield{year}%
-  \newblock
+  \newunit
+  \printfield{volume}%
+  \newunit
   \printfield{pages}
-  %\newblock
+  \addspace
   \printfield{doi}
   \finentry}
 
 \DeclareBibliographyDriver{incollection}{%
   \printnames{author}%
-  \newunit%\newblock
+  \newblock
   \printfield{title}%
-  \newunit%\newblock
+  \newblock
   \printfield{booktitle}%
-  \newblock
+  \newunit
   \printfield{year}%
-  \newblock
+  \newunit
   \printfield{pages}
-  \newblock
+  \newunit
   \printfield{doi}
   \finentry}
 
@@ -237,7 +241,8 @@ Julio de 2026
 
 \input{capitulos/introduccion}
 
-
+\newpage
+\nota{arreglar las referencias al formato de AJ o similar}
 \printbibliography
 
 %4 {\(\lesssim\)} kpc {{R}} {\(\lesssim\)} 9 kpc arreglar al final
