@@ -42,11 +42,15 @@
 
 % Pon aquí tus definiciones:
 
+\usepackage{verbatim}
 \newcommand{\dis}{\displaystyle}
-\usepackage[sorting=nyt, giveninits=true, maxbibnames=4, backend=biber]{biblatex}
-\addbibresource{capitulos/TFM.bib}
+%\usepackage[sorting=nyt, giveninits=true, maxbibnames=4, backend=biber]{biblatex}
+\usepackage{natbib}
+\bibpunct{(}{)}{;}{a}{}{,} % to follow the A&A style
+%\addbibresource{capitulos/TFM.bib}
 %\addbibresource{capitulos/artsintroduccion2.bib}
 
+\begin{comment}
 \DeclareFieldFormat
   [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
   {title}{#1\isdot}
@@ -153,6 +157,8 @@
 %\setlength{\bibhang}{1.5em}
 %\setlength{\bibleftmargin}{1cm}
 
+\end{comment}
+
 \newcommand{\nota}[1]{\textbf{\textcolor{red}{(#1)}}}
 \newcommand{\cluster}{RXJ2129.7+0005}
 \newcommand{\prof}[1]{\textbf{\textcolor[RGB]{0,140,0}{#1}}}
@@ -242,8 +248,8 @@ Julio de 2026
 \input{capitulos/introduccion}
 
 \newpage
-\nota{arreglar las referencias al formato de AJ o similar}
-\printbibliography
+\bibliographystyle{aa}
+\bibliography{capitulos/referencias}
 
 %4 {\(\lesssim\)} kpc {{R}} {\(\lesssim\)} 9 kpc arreglar al final
 

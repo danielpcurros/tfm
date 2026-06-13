@@ -11,19 +11,30 @@ from astropy.io import fits
 import astropy.units as u
 
 path = "/home/daniel/Aplicacións/GALFIT/files/tfm/"
-filter = "277"
-imfile = f"{path}jwst{filter}/mosaic_rxj2129_nircam_f{filter}w_20mas_drz.fits"
-sum = 8000
+filter = "160"
+tel = "h"
+if tel == "jw":
+    imfile = f"{path}{tel}st{filter}/mosaic_rxj2129_nircam_f{filter}w_20mas_drz.fits"
+elif tel == "h":
+    imfile = f"{path}{tel}st{filter}/hlsp_clash_hst_wfc3ir-30mas_rxj2129_f{filter}w_v1_drz.fits"
+
+sum = 43
 
 hduim = fits.open(imfile)
 head = hduim[0].header
 pixelscale = head['CD2_2']*3600.
 corr = ((pixelscale*u.arcsec)**2.).to(u.steradian)
 #pixelscale = head["PIXAR_SR"]
-zp = -6.10-2.5*numpy.log10(corr.value)
+if tel == "jw":
+    zp = -6.10-2.5*numpy.log10(corr.value)
+elif tel == "h":
+    with open(f"{path}{tel}st{filter}/galfit.feedme") as f:
+        zp = float(f.readlines()[12].split()[1])
+
 flux = numpy.copy(sum)#*pixelscale#/head["TELAPSE"]#*head["PIXAR_SR"]
-mag = -2.5*numpy.log10(flux)+zp
+mag =-2.5*numpy.log10(flux)+zp
 print(mag, zp, head["CD2_2"]*3600)
+
 
 
 """index = "3"
