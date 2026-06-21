@@ -1,0 +1,63 @@
+\section{Metodología}
+
+
+
+\subsection{Datos}
+\citet{jimenez-tejaFirstJointMUSE2024} estudiaron la luz intracumular (ICL) de \cluster{} (situado a \(z=0,234\), \(21^{\text{h}}29^{\text{m}}40^{\text{s}}\) de ascensión recta y \(+00^{\circ} 05^{\prime}18^{\prime\prime}.8\) de declinación) en varias longitudes de onda del espectro visible y el infrarrojo cercano, para lo que emplearon datos recogidos por HST, JWST y MUSE. En este trabajo partiremos de los mismos datos para estudiar las shells de la galaxia más brillante del cúmulo (BCG). %A continuación ofrecemos un breve resumen de las condiciones en las que se tomaron y procesaron estos datos.
+\subsubsection{Datos de JWST}
+El Telescopio Espacial James Webb (JWST) observó \cluster{} (de ahora en adelante, \clust{}) con seis filtros de su cámara de infrarrojo cercano (NIRCam), tres del canal de onda corta (SW) y tres del de onda larga (LW). Podemos ver varias de las características de la cámara y de los filtros en la tabla \ref{tab:jwst}. El procesado de las imágenes se hizo a partir de una calibración no estándar \citep{williamsMagnifiedCompactGalaxy2023} que facilita la identificación de regiones de bajo brillo superficial como las que nos ocupan.  \nota{completar con más cosas}
+
+\begin{table}[h!]
+\centerline{
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Telescopio/Cámara/Canal                                     & Filtro                     & \begin{tabular}{c} $\lambda$ \\ (nm) \end{tabular}  &  \begin{tabular}{c} $\Delta \lambda$ \\ (nm) \end{tabular} & \begin{tabular}{c} Exposición \\ (s) \end{tabular} & \begin{tabular}{c} Escala de píxeles \\ (arcsec/píxel) \end{tabular} & \begin{tabular}{c} Ganancia \\ (\(e^- /\)ADU) \end{tabular}   \\ \hline
+\multirow{3}{*}{JWST/NIRCam/SW}                       & F115W                      & 1154           & 225                   & 8245                                & \multirow{3}{*}{0,02}        &    \multirow{3}{*}{2,05} \\ \cline{2-5}
+                                                      & F150W                      & 1501           & 318                   & 19927                               &                              &    \\ \cline{2-5}
+                                                      & F200W                      & 1988           & 461                   & 8245                                &                              &    \\ \hline
+\multirow{3}{*}{JWST/NIRCam/LW} & \multicolumn{1}{l|}{F277W} & 2776           & 672                   & 2061                                & \multirow{3}{*}{0,04\tablefootnote{El procesado de las imágenes es capaz de reducir la escala de píxeles del canal LW hasta 0,02 arcsec/píxel \nota{preguntar cómo se llamaba el proceso}}}        &   \multirow{3}{*}{1,84} \\ \cline{2-5}
+\multicolumn{1}{|l|}{}                                & F356W & 3565           & 786                   & 4981                                &                              &    \\ \cline{2-5}
+\multicolumn{1}{|l|}{}                                & F444W & 4402           & 1024                  & 2061                                &                              &    \\ \hline
+\end{tabular}}
+\caption{Algunas características relevantes de las medidas tomadas con JWST. Se muestran las longitudes de onda de pivote de los filtros, así como su anchura, el tiempo de exposición efectivo de las medidas, y las ganancias y escalas de píxeles nativas de la cámara en sus dos canales.}
+\label{tab:jwst}
+\end{table}
+
+
+
+
+
+\subsubsection{Datos de HST}
+El Telescopio Espacial Hubble (HST) también observó \clust{} con las cámaras ACS y WFC3. La primera utilizó ocho filtros del rango óptico e infrarrojo muy cercano \nota{canal WFC?}, mientras que con la segunda se obtuvieron datos en cinco bandas infrarrojas con el canal IR y cuatro ultravioletas con el canal UVIS. Sin embargo, como indicaron \citet{jimenez-tejaFirstJointMUSE2024}, en el canal UVIS no se aprecian las características de bajo brillo superficial como la ICL, y las imágenes del filtro F555W de ACS no cubren la zona de la BCG. Por lo tanto, en total contamos con las cinco imágenes del canal IR de WFC3 y siete de ACS. De la misma manera que antes, en la tabla \ref{tab:hst} podemos ver un resumen de las características de los filtros utilizados y las medidas asociadas. \nota{seguir con la calibración}
+
+\begin{table}[]
+\centerline{
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Telescopio/Cámara/Canal      & Filtro &  \begin{tabular}{c} $\lambda$ \\ (nm) \end{tabular}  & \begin{tabular}{c} $\Delta \lambda$ \\ (nm) \end{tabular} & \begin{tabular}{c} Exposición \\ (s) \end{tabular} &  \begin{tabular}{c} Escala de píxeles \\ (arcsec/píxel) \end{tabular} & \begin{tabular}{c} Ganancia \\ (\(e^- /\)ADU) \end{tabular} \\ \hline
+\multirow{7}{*}{HST/ACS}     & F435W  & 429,7          & 103,8                 & 3910                                & \multirow{12}{*}{0,03}         &  \multirow{7}{*}{2,0} \\ \cline{2-5}
+                             & F475W  & 476,0          & 145,8                 & 3728                                &                                &  \\ \cline{2-5}
+                             & F606W  & 590,7          & 234,2                 & 3870                                &                                &  \\ \cline{2-5}
+                             & F625W  & 631,8          & 144,2                 & 3728                                &                                &  \\ \cline{2-5}
+                             & F775W  & 776,4          & 152,8                 & 7792                                &                                &  \\ \cline{2-5}
+                             & F814W  & 833,3          & 251,1                 & 7866                                &                                &  \\ \cline{2-5}
+                             & F850LP & 944,5          & 122,9                 & 15084                               &                                &  \\ \cline{1-5} \cline{7-7}
+\multirow{5}{*}{HST/WFC3/IR} & F105W  & 1048,95        & 292,30                & 2614                                &                                &  \multirow{5}{*}{2,5} \\ \cline{2-5}
+                             & F110W  & 1141,40        & 503,40                & 2414                                &                                &  \\ \cline{2-5}
+                             & F125W  & 1245,90        & 301,50                & 3420                                &                                &  \\ \cline{2-5}
+                             & F140W  & 1392,10        & 399,00                & 2311                                &                                &  \\ \cline{2-5}
+                             & F160W  & 1540,52        & 287,88                & 6238                                &                                &  \\ \hline
+\end{tabular}}
+\caption{Algunas características relevantes de las medidas tomadas con HST, similar a la tabla \ref{tab:jwst}. \label{tab:hst}}
+\end{table}
+
+
+
+\subsubsection{Datos de MUSE}
+MUSE (Multi Unit Spectroscopic Explorer) es un espectrógrafo de alta resolución\footnote{\url{https://www.eso.org/sci/facilities/paranal/instruments/muse/overview.html}} instalado en el VLT (Very Large Telescope) del Observatorio Paranal en Chile\footnote{\url{https://www.eso.org/public/spain/teles-instr/paranal-observatory/vlt/}}, perteneciente al ESO (European Southern Observatory).
+
+
+
+
+
+\subsection{Identificación de las shells}

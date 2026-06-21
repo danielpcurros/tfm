@@ -9,10 +9,12 @@ Created on Thu Mar 26 01:18 2026
 import numpy
 from astropy.io import fits
 import astropy.units as u
+import matplotlib.pyplot as plt 
+from astropy.table import Table
 
 path = "/home/daniel/Aplicacións/GALFIT/files/tfm/"
-filter = "160"
-tel = "h"
+filter = "444"
+tel = "jw"
 if tel == "jw":
     imfile = f"{path}{tel}st{filter}/mosaic_rxj2129_nircam_f{filter}w_20mas_drz.fits"
 elif tel == "h":
@@ -36,7 +38,29 @@ mag =-2.5*numpy.log10(flux)+zp
 print(mag, zp, head["CD2_2"]*3600)
 
 
+hdumuse = fits.open(f"{path}muse/outcube.fits")
+cubo = hdumuse[1].data
 
+
+hdujwst = fits.open(f"{path}jwst277/mosaic_rxj2129_nircam_f277w_20mas_drz.fits")
+hduhst = fits.open(f"{path}hst105/hlsp_clash_hst_wfc3ir-30mas_rxj2129_f105w_v1_drz.fits")
+hdujwstrms = fits.open(f"{path}jwst277/mosaic_rxj2129_nircam_f277w_20mas_wht_rms.fits")
+#print(hduhst[0].header["*GAIN"])
+tab_cont = Table.read(f"/home/daniel/Aplicacións/GALFIT/files/tfm/muse_contours.fits")  
+print(hdumuse[0].header["*GAIN*"])
+contours = [
+    numpy.column_stack((tab_cont["X"][tab_cont["Num_cont"] == i], tab_cont["Y"][tab_cont["Num_cont"] == i] ))
+    for i in range(tab_cont["Num_cont"].max() + 1)
+    ]
+
+plt.imshow(
+    cubo[1500],
+    cmap="gray",
+    origin="lower"
+    )
+
+for cont in contours:
+    plt.plot(cont[:, 0], cont[:, 1], 'g-', linewidth=0.5)
 """index = "3"
 hdugal = fits.open(f"{path}jwst{filter}/jwst{filter}_galindex{index}.fits")
 for i in range(len(hdugal)):
