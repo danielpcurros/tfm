@@ -69,7 +69,7 @@ También se han de considerar, como dijimos al principio de esta sección \nota{
 Vamos ahora a observar, como ejercicio ilustrativo, una galaxia concreta de la simulación en múltiples instantes de tiempo. El objetivo es identificar las galaxias que ha ido absorbiendo y analizar las huellas que estas han dejado en su estructura. En la figura \ref{evo} se muestra la masa de esta galaxia desde hace 12000 millones de años hasta la actualidad, junto con sus satélites, la masa y velocidad radial de estos en \(t_{acc}\) (también representado) y su tiempo de extracción \(t_{strip}\). Vemos que en este intervalo de tiempo ha acretado una gran cantidad de satélites, varios de los cuales han podido llegar a fusionarse. Tres de ellos son de gran tamaño y formaron shells. El satélite A fue acretado hace 8 Gyr y sus estrellas se extrajeron hace 6. En consecuencia, aunque hace 5 Gyr sus shells eran visibles, en \(z=0\) ya se han mezclado y no se distinguen. Los satélites B y C, cuyas estrellas se extrajeron hace \(\sim 2\) Gyr, produjeron shells que aún sobrevivien. En los tres casos las trayectorias eran bastante radiales. 
 
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \centering
 \includegraphics[trim={0 0 0 0}, clip, width=0.8\textwidth]{evoluciongalaxia.jpeg}			
 \caption{Izquierda: Historial de formación de una galaxia en los últimos 12000 millones de años. Los círculos verdes representan a la galaxia principal en cada instante de tiempo estudiado, y los otros círculos representan a las galaxias satélite que ha ido acretando, ordenados según \(t_{acc}\). El tamaño de todos los círculos representa la masa de la galaxia correspondiente, y, para el caso de las satélites, su color representa la velocidad radial de su trayectoria en \(t_{acc}\). En las galaxias satélite que se lograron fusionar también se indica el tiempo de extracción \(t_{strip}\), indicado por la línea negra que une dichas galaxias con el círculos verdes correspondiente. Las galaxias que muestran shells en \(z=0\) se señalan con un borde magenta. Derecha: Representación en los espacios de configuración y de fases de las estrellas \textit{ex situ} asociadas con las galaxias satélite A, B y C; para instantes de tiempo adecuados. Como se comenta en el texto, las tres formaron shells, pero solamente las asociadas a B y C se distinguen en la actualidad. Imagen de \citet[fig. 10]{popFormationIncidenceShell2018}. \label{evo}}
@@ -80,14 +80,14 @@ Vamos ahora a observar, como ejercicio ilustrativo, una galaxia concreta de la s
 La última cuestión que trataremos en esta introducción es la metalicidad de las shells en comparación con su entorno, siguiendo lo establecido por \citet{popGalaxiesShellsIllustris2017} (procedente del mismo estudio que \citet{popFormationIncidenceShell2018}, y por lo tanto bajo las mismas condiciones que lo expuesto en el apartado anterior). En la figura \ref{shellmetal} vemos ejemplos de varias galaxias con shells de la simulación Illustris representadas en su espacio de configuración, junto a la metalicidad normalizada \(\log_{10}{(Z/Z_{\odot})}\), siendo \(Z_{\odot}\) la metalicidad solar. Se observa a simple vista que en muchas de las shells existe un exceso de metalicidad en comparación con regiones que se encuentran a distancias galactocéntricas similares. Además, las shells interiores parecen ser más metálicas que las exteriores. Esto se confirma en la figura \ref{popmetal}, donde se estudia una galaxia a diferentes resoluciones, con el objetivo de simular condiciones de observación más realistas, y se comprueba directamente la metalicidad de varios puntos. En efecto, de entre los puntos asociados a shells, la metalicidad del punto 2 es superior a la del 3, que se encuentra más alejado, aunque es de todos modos inferior a la del centro. Además, si comparamos con otros puntos a la misma distancia galactocéntrica, el punto 2 es mucho más metálico que el 5, y lo mismo se puede decir del 3 con respecto al 6. \par   
 
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \centering
 \includegraphics[trim={0 0 0 0}, clip, width=0.6\textwidth]{shellmetallicity.png}			
 \caption{Representación en el espacio de configuración \((x, y)\) de 9 galaxias de la simulación Illustris. El color de cada área de (1,5 kpc)\(^{2}\) indica su metalicidad normalizada \(\log_{10}{(Z/Z_{\odot})}\). Se observa que muchas shells son notablemente metálicas. Imagen de \citet[fig. 3]{popGalaxiesShellsIllustris2017}. \label{shellmetal}}
 \end{figure}
 \noindent
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \centering
 \includegraphics[trim={0 0 0 0}, clip, width=0.8\textwidth]{popmetallicity.png}			
 \caption{\nota{escribir pie de figura}. Imagen de \citet[fig. 4]{popGalaxiesShellsIllustris2017}. \label{popmetal}}

@@ -894,8 +894,23 @@ for i in acsfiltros:
     lbda_acs = np.append(lbda_acs, flujolbda_acs[3])
     err_acs = np.append(err_acs, flujolbda_acs[4])
 
+filtrosfot = "F"+np.append(np.append(acsfiltros, hfiltros), jwfiltros).astype(str)+"W"
+filtrosfot[6] = "F850LP"
+#filtrosfot = np.append(np.append(acsfiltros, hfiltros), jwfiltros)
+flujofot = np.append(np.append(flujo_fullacs3, flujo_fullh3), flujo_fulljw3)
+errfot = np.append(np.append(err_acs, err_h), err_jw)
 
-musefiltros = np.arange(0, 3682, 1)
+print(flujofot.dtype)
+path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
+fotarray = np.zeros(filtrosfot.size, dtype=[('Filtros', 'U6'), ('Flujo', float), ('Error', float)])
+#fotarray = np.column_stack((filtrosfot, flujofot, errfot))
+fotarray['Filtros'] = filtrosfot
+fotarray["Flujo"] = flujofot
+fotarray["Error"] = errfot
+head = "Filtro (HST y JWST)    Flujo (maggies)       Error flujo (maggies)"
+np.savetxt(f"{path}fotometria.txt", fotarray, header=head, fmt="%10s %10.16f  %10.16f") 
+
+musefiltros = np.arange(0, 3682, 1000)
 flujo_parcialmuse = np.array([])
 flujo_fullmuse = np.array([])
 flujo_fullmuse2 = np.array([])
@@ -908,6 +923,10 @@ for i in musefiltros:
     flujolbda_muse = flux(("muse", i), "elipses3")
     flujo_fullmuse3 = np.append(flujo_fullmuse3, flujolbda_muse[0])
     lbda_muse = np.append(lbda_muse, flujolbda_muse[1])
+
+#specarray = np.column_stack((lbda_muse, flujo_fullmuse3))
+#headmuse = "Longitud de onda (ang)      Flujo (maggies)"
+#np.savetxt(f"{path}espectrometria.txt", specarray, header=headmuse) 
 
 #flujo_parcial_chefs = flux(("jw", 277), chefs=True)[2]
 #flujo_full_chefs = flux(("jw", 277), "elipses", chefs=True)[2]

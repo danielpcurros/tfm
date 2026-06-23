@@ -45,9 +45,9 @@ cubo = hdumuse[1].data
 hdujwst = fits.open(f"{path}jwst277/mosaic_rxj2129_nircam_f277w_20mas_drz.fits")
 hduhst = fits.open(f"{path}hst105/hlsp_clash_hst_wfc3ir-30mas_rxj2129_f105w_v1_drz.fits")
 hdujwstrms = fits.open(f"{path}jwst277/mosaic_rxj2129_nircam_f277w_20mas_wht_rms.fits")
-#print(hduhst[0].header["*GAIN"])
+print(hdujwst[0].header["CD2_2"])
 tab_cont = Table.read(f"/home/daniel/Aplicacións/GALFIT/files/tfm/muse_contours.fits")  
-print(hdumuse[0].header["*GAIN*"])
+print(hdumuse[1].header["CD2_2"])
 contours = [
     numpy.column_stack((tab_cont["X"][tab_cont["Num_cont"] == i], tab_cont["Y"][tab_cont["Num_cont"] == i] ))
     for i in range(tab_cont["Num_cont"].max() + 1)
