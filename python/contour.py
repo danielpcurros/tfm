@@ -421,11 +421,14 @@ def conversormuse(jwst):
     path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
     wjw = wcs.WCS(fits.open(f"{path}jwst277/mosaic_rxj2129_nircam_f277w_20mas_drz.fits")[0].header)
     #wmuse = wcs.WCS(fits.open(f"{path}muse/ADP.2017-12-14T12_30_03.217.fits")[1].header)
-    wmuse = wcs.WCS(fits.open(f"{path}muse/outcube.fits")[1].header)
+    headmuse = fits.open(f"{path}muse/outcube.fits")[1].header
+    wmuse = wcs.WCS(headmuse)
+
+    M = headmuse["NAXIS2"]/headmuse["NAXIS1"]
     
     world = wjw.wcs_pix2world(jwst, 1)
     muse = wmuse.wcs_world2pix([[world[i][0], world[i][1], 0] for i in range(len(world))], 1)
-    return np.array([[muse[i][0], muse[i][1]] for i in range(len(muse))])
+    return np.array([[muse[i][0] + 4, muse[i][1] - 6] for i in range(len(muse))])
 
 def cont_to_muse(filename):
     path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
@@ -457,6 +460,108 @@ def cont_to_muse(filename):
 #cont_to_muse("contours")
 #print("CONVERSIÓN", conversormuse([[8000, 8000]]))
 
+def rotatemask(tel, numcont=1, mascara="elipses3"):
+    if tel == "hst":
+        filt = 160
+    elif tel == "jwst":
+        filt = 277
+    elif tel == "muse":
+        filt = ""
+    path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
+    with open(f"{path}jwst277/fit.log") as f:
+        n = -1
+        lines = f.readlines()
+        while "galfit.feedme" not in lines[n]:
+            n-=1
+        line = lines[n+4].split()
+        x0 = float(line[3][:-1])
+        y0 = float(line[4][:-1])
+
+    if tel == "hst":
+        [[x0, y0]] = conversor([[x0, y0]])
+    elif tel == "muse":
+        [[x0, y0]] = conversormuse([[x0, y0]])
+        print("MUSE", x0,y0)
+
+    if tel != "muse":
+        with open(f"{path}{tel}{filt}/galfit.feedme") as f:
+            line = f.readlines()[10].split()
+            xmin = int(line[1])
+            ymin = int(line[3])
+        
+        x0-=xmin
+        y0-=ymin
+    path = f"{path}{tel}{filt}/"
+    mask_inic = fits.open(f"{path}contourmask_{numcont}_{mascara}.fits")[0].data
+
+    """fig, ax = plt.subplots(1, 1, figsize=(8,8))
+    ax.imshow(
+        fits.open(f"{path}outcube.fits")[1].data[3600],
+        vmin=0,
+        vmax=30,
+        cmap='gray',
+        origin="lower",
+    )
+    ax.imshow(
+        mask_inic,
+        #vmin=minimo,
+        #vmax=maximo,
+        cmap='gray',
+        origin="lower",
+        alpha=0.3
+        )
+    
+    tab_contfull = Table.read(f"/home/daniel/Aplicacións/GALFIT/files/tfm/{tel}_contours.fits") 
+    large_contours = [
+    np.column_stack((tab_contfull["X"][tab_contfull["Num_cont"] == i], tab_contfull["Y"][tab_contfull["Num_cont"] == i] ))
+    for i in range(tab_contfull["Num_cont"].max() + 1)
+    ]
+    
+    for cont in large_contours:
+        ax.plot(cont[:, 0], cont[:, 1], 'g-', linewidth=0.5)"""
+    
+    mask_rot = np.ones(np.shape(mask_inic))
+    mask_inic = np.where(mask_inic == 0)
+
+    #print(x0, y0)
+    #print(mask_inic)
+
+    for i in range(len(mask_inic[0])):
+        xinic = mask_inic[1][i] - x0
+        yinic = mask_inic[0][i] - y0
+        rho = np.sqrt(xinic**2 + yinic**2)
+        alfa = np.arctan(yinic/xinic) + np.pi
+        rotacion = 3/5
+        #rotacion = 0
+
+        xrot = int(np.around(x0 + rho*np.cos(alfa + rotacion*np.pi)))
+        yrot = int(np.around(y0 + rho*np.sin(alfa + rotacion*np.pi)))
+
+        mask_rot[yrot, xrot] = 0
+    
+    """fig, ax = plt.subplots(1, 1, figsize=(8,8))
+    ax.imshow(
+        fits.open(f"{path}{tel}{filt}_galindex3.fits")[1].data,
+        vmin=0,
+        vmax=1,
+        cmap='gray',
+        origin="lower",
+    )
+    ax.imshow(
+        mask_rot,
+        #vmin=minimo,
+        #vmax=maximo,
+        cmap='gray',
+        origin="lower",
+        alpha=0.2
+        )"""
+    
+    hdumask = fits.PrimaryHDU(mask_rot)
+    hdumask.writeto(f"{path}contourmask_{numcont}_{mascara}_vacio.fits", overwrite=True)
+
+#rotatemask("jwst")
+#rotatemask("hst")
+#rotatemask("muse")
 
 def resta(telfilts):
     telescope, filter = telfilts
@@ -480,7 +585,7 @@ def resta(telfilts):
     imresta = imbase - imgalaxias_expand
     return imbase, imresta
 
-def flux(telfilts, mascara="simple", chefs=False, bcg=True, numcont=1):
+def flux(telfilts, mascara="simple", chefs=False, bcg=True, numcont=1, vacio=False):
     tel, filter = telfilts
     filter = str(filter)
     tel = tel.lower()
@@ -552,8 +657,18 @@ def flux(telfilts, mascara="simple", chefs=False, bcg=True, numcont=1):
                     mask[ski.draw.ellipse(elipconv[1], elipconv[0], elipconv[2]*elipconv[3], elipconv[2], rotation=elipconv[4])] = 1
         return mask
     
-    mask = fluxmask(mascara)
-    imagen_mask = np.ma.masked_array(imagen, mask=mask)
+    if vacio and tel != "muse":
+        mask = fits.open(f"{path}/{tel}{filter}/contourmask_{numcont}_{mascara}_vacio.fits")[0].data
+    elif vacio and tel == "muse":
+        mask = fits.open(f"{path}/{tel}/contourmask_{numcont}_{mascara}_vacio.fits")[0].data
+    else:
+        mask = fluxmask(mascara)
+    """if (tel == "jwst" and filter == "277") or (tel == "hst" and filter == "160"):
+        hdumascara = fits.PrimaryHDU(mask)
+        hdumascara.writeto(f"{path}/{tel}{filter}/contourmask_{numcont}_{mascara}.fits", overwrite=True)
+    elif tel == "muse":
+        hdumascara = fits.PrimaryHDU(mask)
+        hdumascara.writeto(f"{path}/{tel}/contourmask_{numcont}_{mascara}.fits", overwrite=True)"""
     if tel != "muse":
         with open(f"{path}/{tel}{filter}/galfit.feedme") as f:
             line = f.readlines()[10].split()
@@ -845,7 +960,7 @@ def colorflux(f1, f2, cam="acs", ymin=4600, ymax=5400, xmin=4650, xmax=5450, cir
 #contour(("jw", 277))
 #contour(("h", "110"))
 
-
+vac = True
 jwfiltros = np.array([115, 150, 200, 277, 356, 444])
 flujo_parcialjw = np.array([])
 flujo_fulljw = np.array([])
@@ -857,7 +972,7 @@ for i in jwfiltros:
     #flujo_parcialjw = np.append(flujo_parcialjw, flux(("jwst", i))[2])
     #flujo_fulljw = np.append(flujo_fulljw, flux(("jwst", i), "elipses")[2])
     #flujo_fulljw2 = np.append(flujo_fulljw2, flux(("jwst", i), "elipses2")[2])
-    flujolbda_jw = flux(("jwst", i), "elipses3")
+    flujolbda_jw = flux(("jwst", i), "elipses3", vacio=vac)
     flujo_fulljw3 = np.append(flujo_fulljw3, flujolbda_jw[2])
     lbda_jw = np.append(lbda_jw, flujolbda_jw[3])
     err_jw = np.append(err_jw, flujolbda_jw[4])
@@ -873,7 +988,7 @@ for i in hfiltros:
     #flujo_parcialh = np.append(flujo_parcialh, flux(("hst", i))[2])
     #flujo_fullh = np.append(flujo_fullh, flux(("hst", i), "elipses")[2])
     #flujo_fullh2 = np.append(flujo_fullh2, flux(("hst", i), "elipses2")[2])
-    flujolbda_h = flux(("hst", i), "elipses3")
+    flujolbda_h = flux(("hst", i), "elipses3", vacio=vac)
     flujo_fullh3 = np.append(flujo_fullh3, flujolbda_h[2])
     lbda_h = np.append(lbda_h, flujolbda_h[3])
     err_h = np.append(err_h, flujolbda_h[4])
@@ -889,7 +1004,7 @@ for i in acsfiltros:
     #flujo_parcialacs = np.append(flujo_parcialacs, flux(("acs", i))[2])
     #flujo_fullacs = np.append(flujo_fullacs, flux(("acs", i), "elipses")[2])
     #flujo_fullacs2 = np.append(flujo_fullacs2, flux(("acs", i), "elipses2")[2])
-    flujolbda_acs = flux(("acs", i), "elipses3")
+    flujolbda_acs = flux(("acs", i), "elipses3", vacio=vac)
     flujo_fullacs3 = np.append(flujo_fullacs3, flujolbda_acs[2])
     lbda_acs = np.append(lbda_acs, flujolbda_acs[3])
     err_acs = np.append(err_acs, flujolbda_acs[4])
@@ -908,9 +1023,9 @@ fotarray['Filtros'] = filtrosfot
 fotarray["Flujo"] = flujofot
 fotarray["Error"] = errfot
 head = "Filtro (HST y JWST)    Flujo (maggies)       Error flujo (maggies)"
-np.savetxt(f"{path}fotometria.txt", fotarray, header=head, fmt="%10s %10.16f  %10.16f") 
+np.savetxt(f"{path}fotometria_ref.txt", fotarray, header=head, fmt="%10s %10.16f  %10.16f") 
 
-musefiltros = np.arange(0, 3682, 1000)
+musefiltros = np.arange(0, 3682, 1)
 flujo_parcialmuse = np.array([])
 flujo_fullmuse = np.array([])
 flujo_fullmuse2 = np.array([])
@@ -920,13 +1035,13 @@ for i in musefiltros:
     #flujo_parcialmuse = np.append(flujo_parcialmuse, flux(("muse", i))[2])
     #flujo_fullmuse = np.append(flujo_fullmuse, flux(("muse", i), "elipses")[2])
     #flujo_fullmuse2 = np.append(flujo_fullmuse2, flux(("muse", i), "elipses2")[2])
-    flujolbda_muse = flux(("muse", i), "elipses3")
+    flujolbda_muse = flux(("muse", i), "elipses3", vacio=vac)
     flujo_fullmuse3 = np.append(flujo_fullmuse3, flujolbda_muse[0])
     lbda_muse = np.append(lbda_muse, flujolbda_muse[1])
 
-#specarray = np.column_stack((lbda_muse, flujo_fullmuse3))
-#headmuse = "Longitud de onda (ang)      Flujo (maggies)"
-#np.savetxt(f"{path}espectrometria.txt", specarray, header=headmuse) 
+specarray = np.column_stack((lbda_muse, flujo_fullmuse3))
+headmuse = "Longitud de onda (ang)      Flujo (maggies)"
+np.savetxt(f"{path}espectrometria_ref.txt", specarray, header=headmuse) 
 
 #flujo_parcial_chefs = flux(("jw", 277), chefs=True)[2]
 #flujo_full_chefs = flux(("jw", 277), "elipses", chefs=True)[2]

@@ -149,6 +149,7 @@ def main2(im,head="",bg_rms="",region="",telescope="",jwsw=True,bgfile='',maskfi
     #error_flujo = np.log(10)*flux*error_mag/2.5
     '''
     flujo = flux*exptime
+    bg_rms[bg_rms > 1e2] = 0
     if telescope=='jwst':
         flujo = flujo/photmjsr
         im = im/photmjsr
