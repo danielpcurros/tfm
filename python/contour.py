@@ -10,7 +10,7 @@ import numpy as np
 import glob
 from astropy.io import fits
 from astropy import wcs
-from astropy.table import Table, Column
+from astropy.table import Table
 #import cv2 as cv
 import skimage as ski
 import astropy.units as u
@@ -18,7 +18,6 @@ import matplotlib.pyplot as plt
 import pyregion
 from scipy.ndimage import gaussian_filter
 import fotometria_HST_JWST as fot
-import scipy
 
 def saveconts(cont):
     x = []
@@ -1095,11 +1094,11 @@ if areas:
     #ax2.plot(lbda, flujo_fullmuse2, f"{estilo}", markersize=tamaño, color="red", label="agresivo")
     ax2.plot(lbda_muse, flujo_fullmuse3, f"{estilo}", markersize=tamaño, color="red", label="conservador 2")
 else:
+    ax2.plot(lbda_muse, flujo_fullmuse3, f"-", markersize=tamaño/3, color="black", label="MUSE")
     ax2.plot(lbda_jw, flujo_fulljw3, f"{estilo}", markersize=tamaño, color="red", label="JWST/NIRCam")
     ax2.errorbar(lbda_jw, flujo_fulljw3, yerr=err_jw, ecolor="red", fmt="none")
     ax2.plot(lbda_h, flujo_fullh3, f"{estilo}", markersize=tamaño, color="blue", label="HST/WFC3")
     ax2.errorbar(lbda_h, flujo_fullh3, yerr=err_h, ecolor="blue", fmt="none")
-    ax2.plot(lbda_muse, flujo_fullmuse3, f".-", markersize=tamaño/3, color="black", label="MUSE")
     ax2.plot(lbda_acs, flujo_fullacs3, f"{estilo}", markersize=tamaño, color="green", label="HST/ACS")
     ax2.errorbar(lbda_acs, flujo_fullacs3, yerr=err_acs, ecolor="green", fmt="none")
 #ax2.plot(lbda_jw[-3], flujo_parcial_chefs, f"{estilo}", color="cyan", label="parcial chefs")
