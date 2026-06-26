@@ -8,6 +8,8 @@ Created on Thu Jun 24 18:06 2026
 
 import numpy as np
 import matplotlib.pyplot as plt
+from astropy.table import Table
+from astropy.io import fits
 
 path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
 muse_ref = np.loadtxt(f"{path}espectrometria_ref.txt")
@@ -50,3 +52,37 @@ ax2.plot(lbda_shell/10, spec_shell/spec_ref, "k-", label="Espectroscopía")
 ax2.plot(filt_shell, fot_shell/fot_ref, "rs", label="Fotometría")
 ax2.errorbar(filt_shell, fot_shell/fot_ref, yerr=errfot_ratio, ecolor="red", fmt="none")
 ax2.set_title("shell/ref")
+
+tab_cont = Table.read(f"/home/daniel/Aplicacións/GALFIT/files/tfm/jwst_smallcontours.fits")  
+contours = [
+    np.column_stack((tab_cont["X"][tab_cont["Num_cont"] == i], tab_cont["Y"][tab_cont["Num_cont"] == i]))
+    for i in range(tab_cont["Num_cont"].max() + 1)
+    ]
+
+tab_cont = Table.read(f"/home/daniel/Aplicacións/GALFIT/files/tfm/jwst_contours.fits")  
+large_contours = [
+    np.column_stack((tab_cont["X"][tab_cont["Num_cont"] == i], tab_cont["Y"][tab_cont["Num_cont"] == i]))
+    for i in range(tab_cont["Num_cont"].max() + 1)
+    ]
+
+img = fits.open(f"{path}jwst277/jwst277_galindex3.fits")[3].data
+M, N = np.shape(img)
+
+escala = 6
+fig3, ax3 = plt.subplots(1, 1, figsize=(N/M*escala,escala))
+
+ax3.imshow(
+    img,
+    vmin=0,
+    vmax=0.2,
+    cmap="gray",
+    origin="lower"
+)
+
+for cont in contours:
+    ax3.plot(cont[:, 0], cont[:, 1], 'r-', linewidth=0.3)
+for cont in large_contours:
+    ax3.plot(cont[:, 0], cont[:, 1], 'g-', linewidth=1.5)
+
+ax3.set_xticks([])
+ax3.set_yticks([])

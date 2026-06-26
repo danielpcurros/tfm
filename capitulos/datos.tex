@@ -1,0 +1,104 @@
+\section{Descripción de los datos}
+\nota{revisar las menciones que se hacen del \enquote{halo}. puede que haya que sustituirlas por \enquote{ICL}}
+\nota{lensing en la parte de abajo de la galaxia}
+
+\citet{jimenez-tejaFirstJointMUSE2024} estudiaron la luz intracumular (ICL) de \cluster{} (de ahora en adelante, \clust{}) en varias longitudes de onda del espectro visible y el infrarrojo cercano, para lo que emplearon datos recogidos por HST, JWST y MUSE. En este trabajo partiremos de los mismos datos para estudiar las shells de la galaxia más brillante del cúmulo (BCG). %A continuación ofrecemos un breve resumen de las condiciones en las que se tomaron y procesaron estos datos.
+
+\clust{} está situado a un redshift \(z=0,234\), \(21^{\text{h}}29^{\text{m}}40^{\text{s}}\) de ascensión recta y \(+00^{\circ} 05^{\prime}18^{\prime\prime}.8\) de declinación. Suponiendo un modelo cosmológico estándar con \(H_0 = 70 \: \text{km} \: \text{s}^{-1} \: \text{Mpc}^{-1}\), \(\Omega_m = 0,3\) y \(\Omega_\Lambda = 0,7\); dicho \(z\) se corresponde con un instante \(\sim 10,7\) Gyr después del Big Bang. La BCG tiene unas dimensiones aproximadas de 17x9 arcsec, que se corresponden con 63x33 kpc \citep{wrightCosmologyCalculatorWorld2006}.
+
+\subsection{Datos de JWST}
+El Telescopio Espacial James Webb (JWST) observó \clust{} con seis filtros de su cámara de infrarrojo cercano (NIRCam), tres del canal de onda corta (SW) y tres del de onda larga (LW). Podemos ver varias de las características de la cámara y de los filtros\footnote{\url{https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-instrumentation/nircam-filters\#NIRCamFilters-tablenotes&gsc.tab=0}}\footnote{\url{https://jwst-docs.stsci.edu/jwst-near-infrared-camera/nircam-instrumentation/nircam-detector-overview/nircam-detector-performance\#gsc.tab=0}} en la tabla \ref{tab:jwst}. Las imágenes con las que trabajamos ya fueron procesadas utilizando en su mayor parte la \textit{pipeline} estándar de JWST, aunque cabe destacar que la calibración del detector se hizo mediante un procedimiento personalizado \citep{williamsMagnifiedCompactGalaxy2023} que facilita la identificación de regiones de bajo brillo superficial como las que nos ocupan. La densidad de flujo espectral de cada píxel se expresa en megajanskys por estereorradián (MJy/sr), siendo\footnote{\url{https://iauarchive.eso.org/publications/proceedings_rules/units/}} \(1 \: \text{Jy} = 10^{-26} \: \text{W} \: \text{m}^{-2} \: \text{Hz}^{-1}\). \par
+
+\begin{table}[h!]
+\centerline{
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Telescopio/Cámara/Canal                                     & Filtro                     & \begin{tabular}{c} $\lambda$ \\ (nm) \end{tabular}  &  \begin{tabular}{c} $\Delta \lambda$ \\ (nm) \end{tabular} & \begin{tabular}{c} Exposición \\ (s) \end{tabular} & \begin{tabular}{c} Escala de píxeles \\ (arcsec/píxel) \end{tabular} & \begin{tabular}{c} Ganancia \\ (\(e^- /\)ADU) \end{tabular}   \\ \hline
+\multirow{3}{*}{JWST/NIRCam/SW}                       & F115W                      & 1154           & 225                   & 8245                                & \multirow{3}{*}{0,02}        &    \multirow{3}{*}{2,05} \\ \cline{2-5}
+                                                      & F150W                      & 1501           & 318                   & 19927                               &                              &    \\ \cline{2-5}
+                                                      & F200W                      & 1988           & 461                   & 8245                                &                              &    \\ \hline
+\multirow{3}{*}{JWST/NIRCam/LW} & \multicolumn{1}{l|}{F277W} & 2776           & 672                   & 2061                                & \multirow{3}{*}{0,04 (0,02)\tablefootnote{La escala de píxeles nativa del canal LW es de 0,04 arcsec/píxel, pero procesado de las imágenes es capaz de reducirla hasta 0,02 arcsec/píxel. Por lo tanto, todas las imágenes de JWST presentes en este trabajo tienen la misma resolución. \nota{preguntar cómo se llamaba el proceso}}}        &   \multirow{3}{*}{1,84} \\ \cline{2-5}
+\multicolumn{1}{|l|}{}                                & F356W & 3565           & 786                   & 4981                                &                              &    \\ \cline{2-5}
+\multicolumn{1}{|l|}{}                                & F444W & 4402           & 1024                  & 2061                                &                              &    \\ \hline
+\end{tabular}}
+\caption{Algunas características relevantes de las medidas tomadas con JWST. Se muestran las longitudes de onda de pivote de los filtros, así como su anchura, el tiempo de exposición efectivo de las medidas, y las ganancias y escalas de píxeles nativas de la cámara en sus dos canales.}
+\label{tab:jwst}
+\end{table}
+
+En la figura \ref{bcg} podemos observar la BCG en un filtro del canal SW (F200W, izquierda) y otro del canal LW (F277W, derecha), en ambos casos con una escala de 0 a 1 MJy/sr en cada píxel. Es evidente (lo confirmaremos más adelante) que el filtro F200W es el que detecta las emisiones de luz más intensas, lo que puede ayudar a la identificación de estructuras tenues como las shells. Sin embargo, como ya señalaron \citet{jimenez-tejaFirstJointMUSE2024}, en los filtros del canal SW se forman lo que conocemos como \textit{wisps}, artefactos con forma de líneas paralelas que contaminan la luz del halo y que no se pueden eliminar de manera fiable debido a su variabilidad. El canal LW está libre de wisps, ya que estos parecen originarse exclusivamente en el camino óptico que conduce a la cámara SW \citep{robothamDynamicWispRemoval2023}. En nuestro caso también observamos estos wisps en la figura \ref{bcg}. Los resaltamos de manera más clara en la figura \ref{bcg115}, que se corresponde con la imagen del filtro F115W con una escala de 0 a \(0,3\) MJy/sr. Los wisps nos obligan a tratar los datos del canal SW con cautela. \par
+
+Tanto en la figura \ref{bcg} como la figura \ref{bcg115} se aprecia una concentración de la luz del halo en el eje mayor de la BCG que es compatible con la descripción que hacíamos de las shells en la introducción, aunque hay que señalar (como apuntaban \citeauthor{jimenez-tejaFirstJointMUSE2024}) que en el lado occidental (a la derecha de la imagen) desarrolla una forma más rectangular. Es posible, en cualquier caso, distinguir algunas shells a simple vista a ambos lados de la BCG. Otros elementos destacables de la imagen son las galaxias que, a pesar de no formar parte del cúmulo \nota{calcular z?}, interfieren con la luz de la BCG al encontrarse en la misma región del cielo. Al este de la imagen, cuatro de estas galaxias están tan próximas que pueden llegar a confundirse con la BCG si se reduce el límite superior de la escala, como en la figura \ref{bcg115}. Será necesario tenerlas en cuenta a la hora de caracterizar las shells. \par \label{sec:galaxias}
+
+\begin{figure}[h]
+\centering
+%\includegraphics[trim={100 100 100 100}, clip, width=0.45\textwidth]{bcg200.png}
+%\includegraphics[trim={100 100 100 100}, clip, width=0.45\textwidth]{bcg277.png}		
+\includegraphics[trim={100 100 100 100}, clip, width=0.45\textwidth]{escudoUGRnew.jpg}	
+\caption{Imágenes del entorno de la BCG de \clust{} con los filtros F200W (izquierda) y F277W (derecha), ambos con una escala de 0 a 1 MJy/sr. Se observan multitud de galaxias, algunas de las cuales pertenecen al cúmulo. Alrededor de la BCG existe un halo tenue con forma alargada, dentro del cual se aprecian algunas estructuras que podrían ser shells. \label{bcg}}
+\end{figure}
+\noindent
+
+
+\begin{figure}[h]
+\centering
+%\includegraphics[trim={0 0 0 150}, clip, width=0.6\textwidth]{bcg115.png}	
+\includegraphics[trim={0 0 0 300}, clip, width=0.6\textwidth]{escudoUGRnew.jpg}	
+\caption{Imagen de la BCG en el filtro F115W con una escala de 0 a \(0,3\) MJy/sr, en la que se observan de manera muy clara los wisps que contaminan las imágenes del canal SW de JWST. También se distingue la forma rectangular del halo en su parte occidental, en contraste con el más redondeado extremo oriental. \label{bcg115}}
+\end{figure}
+\noindent
+
+
+
+
+
+\subsection{Datos de HST}
+El Telescopio Espacial Hubble (HST) también observó \clust{} a través del programa CLASH \citep{postmanClusterLensingSupernova2012} con las cámaras ACS y WFC3. Con la primera se utilizaron ocho filtros del rango óptico e infrarrojo muy cercano \nota{canal WFC?}, mientras que con la segunda se obtuvieron datos en cinco bandas infrarrojas con el canal IR y cuatro ultravioletas con el canal UVIS. Sin embargo, como indicaron \citet{jimenez-tejaFirstJointMUSE2024}, en el canal UVIS no se aprecian las características de bajo brillo superficial como la ICL, y las imágenes del filtro F555W de ACS no cubren la zona de la BCG. Por lo tanto, en total contamos con las cinco imágenes del canal IR de WFC3 y siete de ACS. En la tabla\footnote{\url{https://hst-docs.stsci.edu/acsihb/chapter-5-imaging/5-1-imaging-overview}}\footnote{\url{https://hst-docs.stsci.edu/hpiom/chapter-12-wide-field-camera-3-wfc3/12-5-wfc3-reference-information/12-5-2-wfc3-ir-spectral-elements}}\footnote{El valor de la ganancia de cada cámara viene indicado en los archivos de datos.} \ref{tab:hst} podemos ver un resumen de las características de los filtros utilizados y las medidas asociadas. \par
+
+\begin{table}[]
+\centerline{
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Telescopio/Cámara/Canal      & Filtro &  \begin{tabular}{c} $\lambda$ \\ (nm) \end{tabular}  & \begin{tabular}{c} $\Delta \lambda$ \\ (nm) \end{tabular} & \begin{tabular}{c} Exposición \\ (s) \end{tabular} &  \begin{tabular}{c} Escala de píxeles \\ (arcsec/píxel) \end{tabular} & \begin{tabular}{c} Ganancia \\ (\(e^- /\)ADU) \end{tabular} \\ \hline
+\multirow{7}{*}{HST/ACS}     & F435W  & 429,7          & 103,8                 & 3910                                & \multirow{12}{*}{0,03}         &  \multirow{7}{*}{2,0} \\ \cline{2-5}
+                             & F475W  & 476,0          & 145,8                 & 3728                                &                                &  \\ \cline{2-5}
+                             & F606W  & 590,7          & 234,2                 & 3870                                &                                &  \\ \cline{2-5}
+                             & F625W  & 631,8          & 144,2                 & 3728                                &                                &  \\ \cline{2-5}
+                             & F775W  & 776,4          & 152,8                 & 7792                                &                                &  \\ \cline{2-5}
+                             & F814W  & 833,3          & 251,1                 & 7866                                &                                &  \\ \cline{2-5}
+                             & F850LP & 944,5          & 122,9                 & 15084                               &                                &  \\ \cline{1-5} \cline{7-7}
+\multirow{5}{*}{HST/WFC3/IR} & F105W  & 1048,95        & 292,30                & 2614                                &                                &  \multirow{5}{*}{2,5} \\ \cline{2-5}
+                             & F110W  & 1141,40        & 503,40                & 2414                                &                                &  \\ \cline{2-5}
+                             & F125W  & 1245,90        & 301,50                & 3420                                &                                &  \\ \cline{2-5}
+                             & F140W  & 1392,10        & 399,00                & 2311                                &                                &  \\ \cline{2-5}
+                             & F160W  & 1540,52        & 287,88                & 6238                                &                                &  \\ \hline
+\end{tabular}}
+\caption{Algunas características relevantes de las medidas tomadas con HST. \label{tab:hst}}
+\end{table}
+
+Los datos descargados\footnote{\url{https://archive.stsci.edu/prepds/clash/}} ya se procesaron mediante la \textit{pipeline} estándar de HST, que, al contrario que en JWST, es adecuada para estudiar objetos de bajo brillo superficial \citep{jimenez-tejaRELICSICLAnalysis2021,jimenez-tejaFirstJointMUSE2024}. El flujo en cada píxel se expresa en unidades de electrones por segundo (e\(^{-}\)/s). \par
+
+Las imágenes de WFC3/IR cubren aproximadamente el mismo rango de longitudes de onda que el canal SW de JWST, por lo que las imágenes son muy similares. En los filtros ópticos de ACS, sin embargo, tenemos varios cambios. En la figura \ref{bcgacs} representamos la BCG vista con el filtro F606W (izquierda) y F435W (derecha), con una escala de 0 a \(0,05 \: \text{e}^{-}/\text{s}\). Es evidente que hay un descenso abrupto de la luminosidad al acercarnos al azul, de modo que las shells se vuelven indistinguibles. También se vuelven más tenues las galaxias que identificábamos antes. La más noroccidental, de hecho, no se distingue en ninguno de los dos filtros, lo que sugiere que tiene un espectro más rojo que las demás \nota{está más lejos?}. Las imágenes de ACS, por lo tanto, no son adecuadas para identificar las shells.
+
+\begin{figure}[h]
+\centering
+\includegraphics[trim={0 0 0 0}, clip, width=0.45\textwidth]{bcg606.png}
+\includegraphics[trim={0 0 0 0}, clip, width=0.45\textwidth]{bcg435.png}		
+\caption{Imágenes de los filtros F606W (izquierda) y F435W (derecha) de HST/ACS, ambas con una escala de 0 a \(0,05 \: \text{e}^{-}/\text{s}\). En estas longitudes de onda las emisiones son mucho más tenues, y ya no es posible hablar de shells. Además, una de las galaxias que contaminaba la luz de la BCG desaparece por completo, sugiriendo una emisión más desplazada al rojo. \label{bcgacs}}
+\end{figure}
+\noindent
+
+
+\subsection{Datos de MUSE}
+MUSE (Multi Unit Spectroscopic Explorer) es un espectrógrafo de alta resolución\footnote{\url{https://www.eso.org/sci/facilities/paranal/instruments/muse/overview.html}} instalado en el VLT (Very Large Telescope) del Observatorio Paranal en Chile\footnote{\url{https://www.eso.org/public/spain/teles-instr/paranal-observatory/vlt/}}, perteneciente al ESO (European Southern Observatory). Permite caracterizar el espectro de una región del espacio entre longitudes de onda de 475 y 935 nm, por lo que es una herramienta excelente para analizar las emisiones ópticas de los objetos astrofísicos. En el llamado Wide Field Mode, cada medida genera 3681 imágenes con una distancia entre longitudes de onda características de 1,25 nm, lo que se traduce en un poder de resolución de entre 1770 y 3590. También cuenta con una escala de píxeles de 0,2 arcsec/píxel, de modo que su resolución espacial es marcadamente inferior a la que teníamos con JWST y HST. Esto, no obstante, no supone un problema, porque el análisis espectroscópico no requiere imágenes de gran resolución. \par
+
+MUSE identificó \clust{} como un cúmulo de gran interés para las medidas de espectroscopía, y por ello lo ha observado durante un tiempo total acumulado de 20720 s. Esta exposición es suficiente para formar parte de la colección MUSE-DEEP, que engloba las medidas más profundas de MUSE. En la figura \ref{musejimteja} podemos ver el resultado de las observaciones en todas las longitudes de onda. Las imágenes son rojizas, algo esperable tras lo que vimos en la figura \ref{bcgacs}. \par
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[trim={0 0 0 0}, clip, width=0.5\textwidth]{musejimteja.jpg}	
+\caption{Composición sobre todas las longitudes de onda de las imágenes de \clust{} tomadas por MUSE, donde el color de cada píxel viene determinado por su longitud de onda mediana. Fuera de las zonas saturadas de las galaxias, la imagen es rojiza, lo que ya esperábamos tras observar los datos de HST y JWST. Imagen de \citet[fig. 3]{jimenez-tejaFirstJointMUSE2024}.\label{musejimteja}}
+\end{figure}
+\noindent
+
+Las imágenes de MUSE descargadas ya fueron procesadas por el equipo del ESO\footnote{doi:\url{10.18727/archive/42}} y se presentan en unidades de \(10^{-20}\: \text{erg}\: \text{s}^{-1}\: \text{cm}^{-2}\: \text{\AA}^{-1}\), de modo que, del mismo modo que con los datos de JWST y HST, no fue necesario tener en cuenta la calibración del detector. Sin embargo, sí existe una diferencia entre los datos de MUSE y los procedentes de los telescopios espaciales: la señal telúrica (terrestre). La atmósfera absorbe y emite la luz en determinadas longitudes de onda y contamina los espectros medidos, especialmente aquellos producidos por objetos de bajo brillo superficial. Para solucionar este problema utilizamos el software ZAP \citep[Zurich Atmosphere Purge]{sotoZAPEnhancedPCA2016}, que analiza el espectro completo y suprime, en la medida de lo posible, las líneas espectrales atmosféricas.
