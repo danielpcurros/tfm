@@ -151,7 +151,9 @@ def contour_masking(tel, windowed=True, numcont=1):
             f"{path}{tel}st{filter}/contourmask_{numcont}_full2.fits",
             overwrite=True,
             output_verify="fix"
-        )  
+        )
+
+#contour_masking("jw", numcont=0)  
 
 def contour_maskingmuse(tel="muse", numcont=1):
     path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
@@ -458,6 +460,57 @@ def cont_to_muse(filename):
 #contour_masking("h", False)
 #cont_to_muse("contours")
 #print("CONVERSIÓN", conversormuse([[8000, 8000]]))
+
+def shell_properties(numcont, mascara="simple"):
+    path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
+    with open(f"{path}jwst277/fit.log") as f:
+        n = -1
+        lines = f.readlines()
+        while "galfit.feedme" not in lines[n]:
+            n-=1
+        line = lines[n+4].split()
+        x0 = float(line[3][:-1])
+        y0 = float(line[4][:-1])
+    tel = "jwst"
+    filt = 277
+    with open(f"{path}{tel}{filt}/galfit.feedme") as f:
+        line = f.readlines()[10].split()
+        xmin = int(line[1])
+        ymin = int(line[3])
+    x0-=xmin
+    y0-=ymin
+    path = f"{path}{tel}{filt}/"
+    mask = fits.open(f"{path}contourmask_{numcont}.fits")[0].data
+
+    if mascara == "simple":
+        lims = (680, 740)
+        mask[:lims[0], :] = 1
+        mask[lims[1]:, :] = 1
+    #print(mask[mask == 0])
+    area = mask[mask == 0].size
+    print(area)
+
+    hduim = fits.open(f"{path}mosaic_rxj2129_nircam_f277w_20mas_drz.fits")
+    head = hduim[0].header
+    pixelscale = head['CD2_2']*3600.
+    #corr = ((pixelscale*u.arcsec)**2.).to(u.steradian)
+    areasec = area*pixelscale**2
+
+    maskcoords = np.where(mask == 0)
+
+    rholist = np.array([])
+    for i in range(len(mask[0])):
+        xinic = maskcoords[1][i] - x0
+        yinic = maskcoords[0][i] - y0
+        rho = np.sqrt(xinic**2 + yinic**2)
+        rholist = np.append(rholist, rho)
+    
+    rhomedian = np.median(rholist)*pixelscale
+    print(areasec, rhomedian)
+
+shell_properties(1)
+
+    
 
 def rotatemask(tel, numcont=1, mascara="elipses3"):
     if tel == "hst":
@@ -959,7 +1012,7 @@ def colorflux(f1, f2, cam="acs", ymin=4600, ymax=5400, xmin=4650, xmax=5450, cir
 #contour(("jw", 277))
 #contour(("h", "110"))
 
-vac = True
+"""vac = True
 jwfiltros = np.array([115, 150, 200, 277, 356, 444])
 flujo_parcialjw = np.array([])
 flujo_fulljw = np.array([])
@@ -1112,7 +1165,7 @@ ax2.set_ylabel("Flujo (maggies)")
 #ax2.set_yscale("log")
 #ax2.set_xlim(400,900)
 #ax2.set_ylim(17.5,22)
-ax2.legend()
+ax2.legend()"""
 
 #ax[1].plot(lbda_jw, flujo_parcial/np.max(flujo_parcial), f"{estilo}", color="red", label="parcial")
 #ax[1].plot(lbda_jw, flujo_full/flujo_parcial, ".-", color="blue", label="total/parcial")

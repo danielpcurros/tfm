@@ -15,4 +15,5 @@
 **._**
 **python/ignore**
 **python/__pycache__**
-**.toc
+**.toc**
+**ignore**
