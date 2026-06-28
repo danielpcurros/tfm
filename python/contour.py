@@ -508,7 +508,7 @@ def shell_properties(numcont, mascara="simple"):
     rhomedian = np.median(rholist)*pixelscale
     print(areasec, rhomedian)
 
-shell_properties(1)
+#shell_properties(1)
 
     
 

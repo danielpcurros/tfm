@@ -59,6 +59,9 @@ contours = [
     for i in range(tab_cont["Num_cont"].max() + 1)
     ]
 
+med_contours = [cont for cont in contours if len(cont) > 1000]
+med_contours = med_contours[4:]
+
 tab_cont = Table.read(f"/home/daniel/Aplicacións/GALFIT/files/tfm/jwst_contours.fits")  
 large_contours = [
     np.column_stack((tab_cont["X"][tab_cont["Num_cont"] == i], tab_cont["Y"][tab_cont["Num_cont"] == i]))
@@ -81,6 +84,8 @@ ax3.imshow(
 
 for cont in contours:
     ax3.plot(cont[:, 0], cont[:, 1], 'r-', linewidth=0.3)
+for cont in med_contours:
+    ax3.plot(cont[:, 0], cont[:, 1], '-', color="orange", linewidth=0.3)
 for cont in large_contours:
     ax3.plot(cont[:, 0], cont[:, 1], 'g-', linewidth=1.5)
 
