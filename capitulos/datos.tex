@@ -4,7 +4,7 @@
 
 \citet{jimenez-tejaFirstJointMUSE2024} estudiaron la luz intracumular (ICL) de \clust{} en varias longitudes de onda del espectro visible y el infrarrojo cercano, para lo que emplearon datos recogidos por HST, JWST y MUSE. En este trabajo partiremos de los mismos datos para estudiar las shells de la galaxia más brillante del cúmulo (BCG). \par
 
-\clust{} está situado a un redshift \(z=0,234\), \(21^{\text{h}}29^{\text{m}}40^{\text{s}}\) de ascensión recta y \(+00^{\circ} 05^{\prime}18^{\prime\prime}.8\) de declinación. Suponiendo un modelo cosmológico estándar con \(H_0 = 70 \: \text{km} \: \text{s}^{-1} \: \text{Mpc}^{-1}\), \(\Omega_m = 0,3\) y \(\Omega_\Lambda = 0,7\); dicho \(z\) se corresponde con un instante \(\sim 10,7\) Gyr después del Big Bang. La BCG tiene unas dimensiones aproximadas de 17x9 arcsec \nota{muy a ojo}, que se corresponden con 63x33 kpc \citep{wrightCosmologyCalculatorWorld2006}.\par
+\clust{} está situado a un redshift \(z=0,234\), \(21^{\text{h}}29^{\text{m}}40^{\text{s}}\) de ascensión recta y \(+00^{\circ} 05^{\prime}18^{\prime\prime}.8\) de declinación. Suponiendo un modelo cosmológico estándar con \(H_0 = 70 \: \text{km} \: \text{s}^{-1} \: \text{Mpc}^{-1}\), \(\Omega_m = 0,3\) y \(\Omega_\Lambda = 0,7\); dicho \(z\) se corresponde con un instante \(\sim 10,7\) Gyr después del Big Bang y con una escala espacial de \(3,722\) kpc/arcsec \citep{wrightCosmologyCalculatorWorld2006}.\par
 
 Si bien este no es el primer estudio fotométrico de las shells de una galaxia \citep[p. ej.][]{mihosStelLARPOPULATIONSOUTER2013}, sí es la primera vez que se analizan las de un objeto tan lejano (la galaxia estudiada por \citeauthor{mihosStelLARPOPULATIONSOUTER2013} se encuentra a \(z = 0,003\)\footnote{\url{http://ned.ipac.caltech.edu/cgi-bin/objsearch?objname=Messier+49&extend=no&hconst=73&omegam=0.27&omegav=0.73&corr_z=1&out_csys=Equatorial&out_equinox=J2000.0&obj_sort=RA+or+Longitude&of=pre_text&zv_breaker=30000.0&list_limit=5&img_stamp=YES}}) utilizando los datos de estos tres telescopios al mismo tiempo. Como veremos, la resolución superior de JWST y sus mayores capacidades para la observación en el infrarrojo suponen un salto cualitativo para la caracterización de objetos de bajo brillo superficial como las shells. \par
 
@@ -30,14 +30,14 @@ Telescopio/Cámara/Canal                                     & Filtro           
 
 En la figura \ref{bcg} podemos observar la BCG en un filtro del canal SW (F200W, izquierda) y otro del canal LW (F277W, derecha), en ambos casos con una escala de 0 a 1 MJy/sr en cada píxel. Es evidente (lo confirmaremos más adelante) que el filtro F200W es el que detecta con mayor intensidad la luz, lo que puede ayudar a la identificación de estructuras tenues como las shells. Sin embargo, como ya señalaron \citet{jimenez-tejaFirstJointMUSE2024}, en los filtros del canal SW se forman lo que conocemos como \textit{wisps}, artefactos con forma de líneas paralelas que contaminan la luz del halo y que no se pueden eliminar de manera fiable debido a su variabilidad. El canal LW está libre de wisps, ya que estos parecen originarse exclusivamente en el camino óptico que conduce a la cámara SW \citep{robothamDynamicWispRemoval2023}. En nuestro caso también observamos estos wisps en la figura \ref{bcg}. Los resaltamos de manera más clara en la figura \ref{bcg115}, que se corresponde con la imagen del filtro F115W con una escala de 0 a \(0,3\) MJy/sr. Los wisps nos obligan a tratar los datos del canal SW con cautela. \par
 
-Tanto en la figura \ref{bcg} como la figura \ref{bcg115} se aprecia una concentración de la luz del halo en el eje mayor de la BCG que es compatible con la descripción que hacíamos de las shells en la introducción, aunque hay que señalar (como apuntaban \citeauthor{jimenez-tejaFirstJointMUSE2024}) que en el lado occidental (a la derecha de la imagen) desarrolla una forma más rectangular \nota{galaxia por delante?}. Es posible, en cualquier caso, distinguir algunas shells a simple vista a ambos lados de la BCG. Otros elementos destacables de la imagen son las galaxias que, a pesar de no formar parte del cúmulo, interfieren con la luz de la BCG al encontrarse en la misma región del cielo. Al este de la imagen, cuatro de estas galaxias están tan próximas que pueden llegar a confundirse con la BCG si se reduce el límite superior de la escala, como en la figura \ref{bcg115}. Será necesario tenerlas en cuenta a la hora de caracterizar las shells. \par \label{sec:galaxias}
+Tanto en la figura \ref{bcg} como la figura \ref{bcg115} se aprecia una concentración de la luz del halo en el eje mayor de la BCG que es compatible con la descripción que hacíamos de las shells en la introducción, aunque hay que señalar (como apuntaban \citeauthor{jimenez-tejaFirstJointMUSE2024}) que en el lado occidental (a la derecha de la imagen) desarrolla una forma más rectangular \nota{galaxia por delante?}. Es posible, en cualquier caso, distinguir algunas shells a simple vista a ambos lados de la BCG. Otros elementos destacables de la imagen son las galaxias que interfieren con la luz de la BCG al encontrarse en la misma región del cielo. Al este de la imagen, varias de estas galaxias están tan próximas que pueden llegar a confundirse con la BCG si se reduce el límite superior de la escala, como en la figura \ref{bcg115}. Las destacamos en una escala menos saturada en la figura \ref{fig:galaxias}, y distinguimos hasta ocho distintas. Será necesario tenerlas en cuenta a la hora de caracterizar las shells. \par \label{sec:galaxias}
 
 \begin{figure}[h]
 \centering
 %\includegraphics[trim={100 100 100 100}, clip, width=0.45\textwidth]{bcg200.png}
 %\includegraphics[trim={100 100 100 100}, clip, width=0.45\textwidth]{bcg277.png}		
 \includegraphics[trim={100 100 100 100}, clip, width=0.45\textwidth]{escudoUGRnew.jpg}	
-\caption{Imágenes del entorno de la BCG de \clust{} con los filtros F200W (izquierda) y F277W (derecha), ambos con una escala de 0 a 1 MJy/sr. Se observan multitud de galaxias, algunas de las cuales pertenecen al cúmulo \nota{todas?}. Alrededor de la BCG existe un halo tenue con forma alargada, dentro del cual se aprecian algunas estructuras que podrían ser shells. \label{bcg}}
+\caption{Imágenes del entorno de la BCG de \clust{} con los filtros F200W (izquierda) y F277W (derecha), ambos con una escala de 0 a 1 MJy/sr. Alrededor de la BCG existe un halo tenue con forma alargada, dentro del cual se aprecian algunas estructuras que podrían ser shells. \label{bcg}}
 \end{figure}
 \noindent
 
@@ -50,6 +50,13 @@ Tanto en la figura \ref{bcg} como la figura \ref{bcg115} se aprecia una concentr
 \end{figure}
 \noindent
 
+
+\begin{figure}[h]
+\centering
+\includegraphics[trim={0 0 0 0}, clip, width=0.4\textwidth]{galaxias.png}
+\caption{Imagen del filtro F277W de las galaxias presentes en el costado oriental de la BCG a una escala de 0-2 MJy/sr. Se distinguen claramente una galaxia al sur y tres al norte \nota{hablar de la PSF?}. Cerca del centro vemos cuatro puntos luminosos diferenciados que pueden tratarse un pequeño grupo de galaxias. El más occidental forma una cola visible que se extiende al norte del grupo. Si cada uno de esos puntos brillantes representa una galaxia individual, observamos un total de ocho. \nota{debería incluir etiquetas?} \label{fig:galaxias}}
+\end{figure}
+\noindent
 
 
 
@@ -80,7 +87,7 @@ Telescopio/Cámara/Canal      & Filtro &  \begin{tabular}{c} $\lambda$ \\ (nm) \
 
 Los datos descargados\footnote{\url{https://archive.stsci.edu/prepds/clash/}} ya se procesaron mediante la \textit{pipeline} estándar de HST, que, al contrario que en JWST, es adecuada para estudiar objetos de bajo brillo superficial \citep{jimenez-tejaRELICSICLAnalysis2021,jimenez-tejaFirstJointMUSE2024}. El flujo en cada píxel se expresa en unidades de electrones por segundo (e\(^{-}\)/s). \par
 
-Las imágenes de WFC3/IR cubren aproximadamente el mismo rango de longitudes de onda que el canal SW de JWST, por lo que las imágenes son muy similares. En los filtros ópticos de ACS, sin embargo, tenemos varios cambios. En la figura \ref{bcgacs} representamos la BCG vista con el filtro F606W (izquierda) y F435W (derecha), con una escala de 0 a \(0,05 \: \text{e}^{-}/\text{s}\). Es evidente que hay un descenso abrupto de la luminosidad al acercarnos al azul, de modo que las shells se vuelven indistinguibles. También se vuelven más tenues las galaxias que identificábamos antes. La más noroccidental, de hecho, no se distingue en ninguno de los dos filtros, lo que sugiere que tiene un espectro más rojo que las demás \nota{está más lejos?}. Las imágenes de ACS, por lo tanto, no son adecuadas para identificar las shells.
+Las imágenes de WFC3/IR cubren aproximadamente el mismo rango de longitudes de onda que el canal SW de JWST, por lo que las imágenes son muy similares. En los filtros ópticos de ACS, sin embargo, tenemos varios cambios. En la figura \ref{bcgacs} representamos la BCG vista con el filtro F606W (izquierda) y F435W (derecha), con una escala de 0 a \(0,05 \: \text{e}^{-}/\text{s}\). Es evidente que hay un descenso abrupto de la luminosidad al acercarnos al azul provocado por el alto redshift del cúmulo, de modo que las shells se vuelven indistinguibles. Las imágenes de ACS, por lo tanto, no son adecuadas para identificar las shells. También se vuelven más tenues las galaxias que identificábamos antes. La más noroccidental, de hecho, no se distingue en ninguno de los dos filtros, lo que sugiere que tiene un espectro más rojo que las demás. En efecto, en el catálogo de objetos de CLASH esta galaxia (ID 760) se sitúa a un redshift \(0,937 \leq z \leq 1,029\), mucho mayor que el del resto. 
 
 \begin{figure}[h]
 \centering

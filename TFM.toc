@@ -8,7 +8,9 @@
 \contentsline {subsection}{\numberline {2.2}Datos de HST}{14}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}Datos de MUSE}{16}{subsection.2.3}%
 \contentsline {section}{\numberline {3}Metodología}{18}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Identificación y morfología de las shells de la BCG de RXJ2129{}}{18}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Selección de la región de estudio}{22}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Representación del color de la galaxia}{24}{subsection.3.3}%
-\contentsline {section}{\numberline {4}Resultados}{24}{section.4}%
+\contentsline {subsection}{\numberline {3.1}Morfología de las shells de la BCG de RXJ2129{}}{18}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Color de las shells}{22}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Análisis espectroscópico y fotométrico de la shell oriental}{25}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Selección de la región de estudio}{25}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Obtención de propiedades físicas y químicas}{26}{subsubsection.3.3.2}%
+\contentsline {section}{\numberline {4}Resultados}{26}{section.4}%

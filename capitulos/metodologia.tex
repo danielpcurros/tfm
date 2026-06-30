@@ -1,6 +1,6 @@
 \section{Metodología}
 \label{sec:metodologia}
-\subsection{Identificación y morfología de las shells de la BCG de \clust{}}
+\subsection{Morfología de las shells de la BCG de \clust{}} \label{sec:contorno}
 \nota{no tengo muy claro si usar el presente o el pasado para describir los pasos}
 El primer objetivo que nos debemos marcar es la delimitación de las regiones del espacio cercano a la BCG en las que existen shells. Como explicamos en la introducción, las shells se pueden considerar como excesos de luminosidad que alteran la curva de luz de una galaxia. Por lo tanto, una forma sencilla de aislar la luz producida por las shells es proponer un modelo \enquote{de primer orden} para el perfil luminoso de la BCG y considerar únicamente la luz sobrante, en lo que llamamos la imagen residual. El software GALFIT \citep{pengDetailedStructuralDecomposition2002, pengDETAILEDDECOMPOSITIONGALAXY2010} es capaz de ajustar los parámetros de dicho modelo y devolver una imagen, a priori, sin la luz de la BCG. El perfil de luz más común para una galaxia elíptica es el llamado perfil de Sérsic \citep{sersicInfluenceAtmosphericInstrumental1963,savorgnanSupermassiveBlackHole2013}, que tiene la siguiente forma \citep{pengDetailedStructuralDecomposition2002}:
 
@@ -52,17 +52,29 @@ La shell occidental, por su parte, está más alejada del centro, a una distanci
 \end{figure}
 \noindent
 
-\subsection{Selección de la región de estudio}
-En el apartado anterior describimos la morfología de las dos shells que pudimos identificar en la imagen tomada con el filtro F277W de JWST. El siguiente paso consiste en seleccionar la región sobre la que haremos los análisis fotométrico y espectroscópico. Debido a su pequeño tamaño y baja luminosidad, la shell occidental puede presentar dificultades para su estudio. Por lo tanto, en lo que resta de este trabajo nos centraremos en la shell oriental. \par
+\subsection{Color de las shells} \nota{mover a resultados?} \nota{explicar la conversión a \(m_{AB}\)?}
+Una vez caracterizado el contorno de la shell, queremos medir sus propiedades físicas y compararlas con las de otras regiones a la misma distancia galactocéntrica. La primera aproximación que haremos será muy visual. Sabemos que existe una correlación significativa entre el índice de color de una población estelar y su composición química: cuanto mayor es su metalicidad, más roja es una galaxia \citep{bruzualStellarPopulationSynthesis2003,mihosStelLARPOPULATIONSOUTER2013,montesINTRACLUSTERLIGHTFRONTIER2014}. Por ello nos interesa elaborar un mapa de color de la BCG similar al de \citet[fig. 1]{mihosStelLARPOPULATIONSOUTER2013}, comparando el flujo medido por dos de los filtros que tenemos disponibles. No obstante, esta correlación está fuertemente degenerada con la edad de la población estudiada, de modo que una galaxia más antigua también es más roja. En este apartado, por lo tanto, no podemos separar ambos efectos, pero sí es de interés observar, en cualquier caso, si la shell tiene características particulares. \par
 
-No obstante, como señalamos en el apartado \ref{sec:galaxias}, en la shell oriental están presentes varias galaxias que no podemos incluir en el análisis. Las destacamos en la figura \ref{fig:galaxias}, con una escala menos saturada que permite distinguir las zonas de brillo alto. Aunque anteriormente identificamos cuatro galaxias de características similares, en este caso se pueden distinguir hasta ocho de tamaños variados. \par \nota{redshift? núm. real de galaxias? comprobar clash}
+Escogemos filtros de HST/ACS para asegurarnos de que no introducimos distorsiones al comparar imágenes de cámaras distintas. De ellos, nos decantamos por F435W y F625W, por generar un contraste suficiente entre sus imágenes y tener anchos de banda similares. En la figura \ref{popmetal}, \citeauthor{popGalaxiesShellsIllustris2017} comparaba la metalicidad mediana de varios puntos situados sobre shells y de otros ajenos a ellas pero situados a las mismas distancias galactocéntricas. En nuestro caso trabajamos con medidas reales en las que, tras la sustracción del fondo, muchos píxeles tienen flujos negativos, por lo que no es posible obtener un valor físicamente válido para el índice de color mediano de un área. Por este motivo reservaremos las medidas numéricas para el apartado siguiente. No obstante, a modo ilustrativo, representamos en el mapa los contornos de las shells, así como varias regiones de referencia con formas idénticas y situadas a las mismas distancias galactocéntricas, rotadas un cierto ángulo con respecto al centro de la BCG calculado por GALFIT. El ángulo es de \(\frac{3\pi}{5}\) en el caso de la shell oriental y de \(\frac{\pi}{3}\) en el caso de la occidental. También incluimos, siguiendo el mismo planteamiento, regiones \enquote{espejo} situadas en el extremo opuesto de la BCG para cada shell. En la figura \ref{color} vemos el mapa de color con los contornos de las shells representados en blanco, las regiones de referencia en naranja, y las regiones espejo en verde. Sobre ella se ha aplicado, con el objetivo de reducir el ruido visual de la imagen, un filtro gaussiano con la función \textit{ndimage.gaussian\_filter} de la librería de Python \textit{scipy} con \(\textit{sigma} = 0,6\). \nota{puede que no ayude} \par % ya que hacemos un ejercicio similar, pero, dado que estamos trabajando con una imagen real y necesitamos áreas mayores, utilizamos toda la superficie de las shells (con las galaxias enmascaradas) calculada en los apartados anteriores y medimos el índice de color F435W - F625W sobre ellas. las áreas sin shells utilizamos contornos de idéntica forma y situados a la misma distancia al centro galáctico, con una rotación con respecto a este de \(\frac{3\pi}{5}\) en el caso de la shell oriental y \(\frac{\pi}{3}\) en el de la occidental.
+
 
 \begin{figure}[h]
 \centering
-\includegraphics[trim={0 0 0 0}, clip, width=0.4\textwidth]{galaxias.png}
-\caption{\nota{escribir pie de figura. PSF?} 0-2 MJy/sr \label{fig:galaxias}}
+\includegraphics[trim={5 0 5 5}, clip, width=0.7\textwidth]{color.png}
+\caption{\nota{escribir pie de figura} \nota{meter contornos espejo}\label{color}}
 \end{figure}
 \noindent
+
+Es evidente que las regiones más rojas son las cercanas a los centros galácticos, lo que ya era esperable y se apreciaba de forma nítida en \citet[fig. 1]{mihosStelLARPOPULATIONSOUTER2013}. En cuanto a las shells, observamos un claro exceso de luminosidad del filtro rojo en la zona perteneciente a la shell oriental, especialmente en comparación con su región de referencia. Su región espejo también es visiblemente más azul, por lo que, si existen shells en esta zona que no pudimos detectar, estas no exhiben las mismas propiedades. Más al oeste, en la shell pequeña, el índice de color no es especialmente alto, pero sí destaca frente a su región de referencia al norte. \nota{incluir región espejo pequeña} Todo esto parece indicar que, como indicaban las predicciones teóricas, las shells presentan un exceso de luminosidad en los filtros más rojos. \par
+
+%Las medidas confirman estas apreciaciones. El índice de color mediano en el contorno de la shell, con las galaxias enmascaradas como se indica en el apartado \ref{sec:mascara}, es de 1,65, mientras que en la región de referencia (también enmascarada en lugares equivalentes) es de 1,32. 
+
+\subsection{Análisis espectroscópico y fotométrico de la shell oriental}
+\nota{descripción de los objetivos}
+\subsubsection{Selección de la región de estudio} \label{sec:mascara}
+En el apartado \ref{sec:contorno} describimos la morfología de las dos shells que pudimos identificar en la imagen tomada con el filtro F277W de JWST. El siguiente paso consiste en seleccionar la región sobre la que haremos los análisis fotométrico y espectroscópico. Debido a su pequeño tamaño y baja luminosidad, la shell occidental puede presentar dificultades para su estudio. Por lo tanto, en lo que resta de este trabajo nos centraremos en la shell oriental. \par
+
+No obstante, como señalamos en el apartado \ref{sec:galaxias} y la figura \ref{fig:galaxias}, en la shell oriental están presentes varias galaxias que no podemos incluir en el análisis. El procedimiento más sencillo para eliminar su influencia en las propiedades de la shell es aplicar una máscara sobre la región en la que se encuentran. El inconveniente de este enfoque es que corremos el riesgo de reducir en exceso el área de estudio y, como consecuencia de ello, trabajar con un flujo excesivamente bajo y dificultar la obtención de resultados concluyentes. Por ello la máscara debe ser mínima. \par
 
 \nota{puedo incluir los intentos de eliminar las galaxias de la shell con GALFIT y CHEFs o no. es cierto que no lleva a nada}
 
@@ -75,10 +87,14 @@ No obstante, como señalamos en el apartado \ref{sec:galaxias}, en la shell orie
 \noindent
 \end{comment}
 
-El procedimiento más sencillo para eliminar la influencia de las galaxias en las propiedades de la shell es aplicar una máscara sobre la región en la que se encuentran. El inconveniente de este enfoque es que corremos el riesgo de reducir en exceso el área de estudio y, como consecuencia de ello, trabajar con un flujo excesivamente bajo y dificultar la obtención de resultados concluyentes. Por ello la máscara debe ser mínima. \par
-
 Para evaluar si una máscara es adecuada, tomamos como referencia una región en el centro de la shell situada entre \(+00^{\circ} 05^{\prime}22^{\prime\prime}.12\) y \(+00^{\circ} 05^{\prime}23^{\prime\prime}.32\) de declinación y con un área de 3,2 arcsec\(^{2}\) (44,3 kpc\(^{2}\)). Esta región no se ve afectada por la influencia de las galaxias. Posteriormente se compara el flujo de la shell enmascarada en cada filtro \nota{qué filtros?} con el de la región de referencia. Si \nota{procedimiento para averiguar similitud}, la máscara se considera apta para medir las propiedades de la shell. \par
 
+\nota{descripción más en detalle de la medición del flujo} \nota{paso de las máscaras a otros telescopios}
 La medición del flujo en la shell se hará en maggies, donde el flujo en maggies \(\Phi_{mag} = 10^{-0,4 m_{AB}}\), siendo \(m_{AB}\) la magnitud AB del objeto\footnote{\url{https://prospect.readthedocs.io/en/latest/dataformat.html}}. También es necesario considerar las fuentes de error de la imagen. Existen dos principales: la incertidumbre de Poisson asociada al número de cuentas medido por el detector y el ruido de fondo de la imagen. A su vez, el ruido de fondo está compuesto por la incertidumbre en \nota{sky noise in the aperture?}, y por \nota{aperture sum?}. \par
 
-\subsection{Representación del color de la galaxia}
+La máscara calculada
+
+
+\subsubsection{Obtención de propiedades físicas y químicas}
+\nota{descripción de CIGALE}
+

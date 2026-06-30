@@ -153,7 +153,7 @@ def contour_masking(tel, windowed=True, numcont=1):
             output_verify="fix"
         )
 
-#contour_masking("jw", numcont=0)  
+#contour_masking("h", numcont=0, windowed=True)  
 
 def contour_maskingmuse(tel="muse", numcont=1):
     path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
@@ -512,7 +512,7 @@ def shell_properties(numcont, mascara="simple"):
 
     
 
-def rotatemask(tel, numcont=1, mascara="elipses3"):
+def rotatemask(tel, numcont=1, mascara="_elipses3", rotacion=3/5):
     if tel == "hst":
         filt = 160
     elif tel == "jwst":
@@ -544,7 +544,7 @@ def rotatemask(tel, numcont=1, mascara="elipses3"):
         x0-=xmin
         y0-=ymin
     path = f"{path}{tel}{filt}/"
-    mask_inic = fits.open(f"{path}contourmask_{numcont}_{mascara}.fits")[0].data
+    mask_inic = fits.open(f"{path}contourmask_{numcont}{mascara}.fits")[0].data
 
     """fig, ax = plt.subplots(1, 1, figsize=(8,8))
     ax.imshow(
@@ -582,8 +582,9 @@ def rotatemask(tel, numcont=1, mascara="elipses3"):
         xinic = mask_inic[1][i] - x0
         yinic = mask_inic[0][i] - y0
         rho = np.sqrt(xinic**2 + yinic**2)
-        alfa = np.arctan(yinic/xinic) + np.pi
-        rotacion = 3/5
+        alfa = np.arctan(yinic/xinic)
+        if numcont == 1:
+            alfa += np.pi
         #rotacion = 0
 
         xrot = int(np.around(x0 + rho*np.cos(alfa + rotacion*np.pi)))
@@ -609,10 +610,10 @@ def rotatemask(tel, numcont=1, mascara="elipses3"):
         )"""
     
     hdumask = fits.PrimaryHDU(mask_rot)
-    hdumask.writeto(f"{path}contourmask_{numcont}_{mascara}_vacio.fits", overwrite=True)
+    hdumask.writeto(f"{path}contourmask_{numcont}{mascara}_vacio.fits", overwrite=True)
 
 #rotatemask("jwst")
-#rotatemask("hst")
+#rotatemask("hst", numcont=0, rotacion=1/3, mascara="")
 #rotatemask("muse")
 
 def resta(telfilts):
@@ -636,6 +637,125 @@ def resta(telfilts):
     
     imresta = imbase - imgalaxias_expand
     return imbase, imresta
+
+def rotatemask2(tel, numcont=1, mascara="elipses3", rotacion=3/5):
+    if tel == "hst":
+        filt = 160
+    elif tel == "jwst":
+        filt = 277
+    elif tel == "muse":
+        filt = ""
+    path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
+
+    with open(f"{path}jwst277/fit.log") as f:
+        n = -1
+        lines = f.readlines()
+        while "galfit.feedme" not in lines[n]:
+            n-=1
+        line = lines[n+4].split()
+        x0 = float(line[3][:-1])
+        y0 = float(line[4][:-1])
+
+    if tel == "hst":
+        [[x0, y0]] = conversor([[x0, y0]])
+    elif tel == "muse":
+        [[x0, y0]] = conversormuse([[x0, y0]])
+
+    if tel != "muse":
+        with open(f"{path}{tel}{filt}/galfit.feedme") as f:
+            line = f.readlines()[10].split()
+            xmin = int(line[1])
+            ymin = int(line[3])
+
+            N = int(line[2]) - xmin + 1
+            M = int(line[4]) - ymin + 1
+
+        x0 = x0 - xmin
+        y0 = y0 - ymin
+    else:
+        [M, N] = np.shape(fits.open(f"{path}{tel}/outcube.fits")[1].data)
+
+    tab_cont = Table.read(f"{path}{tel}_contours.fits")  
+    contour_inic = [
+        np.column_stack(((tab_cont["X"][tab_cont["Num_cont"] == i] - xmin), (tab_cont["Y"][tab_cont["Num_cont"] == i] - ymin)))
+        for i in range(tab_cont["Num_cont"].max() + 1)
+        ][numcont]
+    
+    
+    contour_rot = np.zeros(np.shape(contour_inic))
+    for i in range(len(contour_inic)):
+        xinic = contour_inic[i, 0] - x0
+        yinic = contour_inic[i, 1] - y0
+        rho = np.sqrt(xinic**2 + yinic**2)
+        alfa = np.arctan(yinic/xinic)
+        if numcont == 1:
+            alfa += np.pi
+
+        xrot = int(np.around(x0 + rho*np.cos(alfa + rotacion*np.pi)))
+        yrot = int(np.around(y0 + rho*np.sin(alfa + rotacion*np.pi)))
+
+        contour_rot[i] = [xrot, yrot]
+
+    print(contour_rot)
+    contour_mask = ski.measure.grid_points_in_poly(
+                                    (M, N),
+                                    contour_rot,
+                                    binarize=True
+                                    )
+    hdumask = fits.PrimaryHDU(data=np.invert(contour_mask).astype(int))
+    hdumask.writeto(
+            f"{path}{tel}{filt}/contourmask_{numcont}_vacioprueba.fits",
+            overwrite=True,
+            output_verify="fix"
+        )
+
+#rotatemask2("jwst")
+
+def rotatecont(tel="hst", filt=160, ymin=4600, ymax=5400, xmin=4650, xmax=5450, npixbin=4, numcont=1, rotacion=3/5):
+    path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
+    with open(f"{path}jwst277/fit.log") as f:
+        n = -1
+        lines = f.readlines()
+        while "galfit.feedme" not in lines[n]:
+            n-=1
+        line = lines[n+4].split()
+        x0 = float(line[3][:-1])
+        y0 = float(line[4][:-1])
+
+    if tel == "hst":
+        [[x0, y0]] = conversor([[x0, y0]])
+
+    """with open(f"{path}{tel}{filt}/galfit.feedme") as f:
+            line = f.readlines()[10].split()
+            xmin = int(line[1])
+            ymin = int(line[3])"""
+        
+    x0 = (x0 - xmin)/npixbin
+    y0 = (y0 - ymin)/npixbin
+
+    tab_cont = Table.read(f"{path}hst_contours_full.fits")  
+    contour_inic = [
+        np.column_stack(((tab_cont["X"][tab_cont["Num_cont"] == i] - xmin)/npixbin, (tab_cont["Y"][tab_cont["Num_cont"] == i] - ymin)/npixbin))
+        for i in range(tab_cont["Num_cont"].max() + 1)
+        ][numcont]
+    
+    print(np.shape(contour_inic))
+    
+    contour_rot = np.zeros(np.shape(contour_inic))
+    for i in range(len(contour_inic)):
+        xinic = contour_inic[i, 0] - x0
+        yinic = contour_inic[i, 1] - y0
+        rho = np.sqrt(xinic**2 + yinic**2)
+        alfa = np.arctan(yinic/xinic)
+        if numcont == 1:
+            alfa += np.pi
+
+        xrot = int(np.around(x0 + rho*np.cos(alfa + rotacion*np.pi)))
+        yrot = int(np.around(y0 + rho*np.sin(alfa + rotacion*np.pi)))
+
+        contour_rot[i] = [xrot, yrot]
+    
+    return contour_rot
 
 def flux(telfilts, mascara="simple", chefs=False, bcg=True, numcont=1, vacio=False):
     tel, filter = telfilts
@@ -858,6 +978,12 @@ def colorindex(f1, f2, mascara="elipses3", cam="acs", ymin=4600, ymax=5400, xmin
     photflam1 = file1.header["PHOTFLAM"]
     photflam2 = file2.header["PHOTFLAM"]
 
+    photplam1 = file1.header["PHOTPLAM"]
+    photplam2 = file2.header["PHOTPLAM"]
+
+    zp1 = -5*np.log10(photplam1)-2.408
+    zp2 = -5*np.log10(photplam2)-2.408
+
     img1 = file1.data[ymin:ymax, xmin:xmax]
     img2 = file2.data[ymin:ymax, xmin:xmax]
 
@@ -872,16 +998,16 @@ def colorindex(f1, f2, mascara="elipses3", cam="acs", ymin=4600, ymax=5400, xmin
     img1[img2 <= 0] = np.ma.masked
     img2[img1 <= 0] = np.ma.masked
 
-    elipse = np.loadtxt(f"{path}{mascara}.txt")
+    """elipse = np.loadtxt(f"{path}{mascara}.txt")
     for elip in elipse:
         elipconv = conversor_elipses(elip)
         elipconv = elipconv - np.array([xmin, ymin, 0, 0, 0])
         elipconv[0:3] = elipconv[0:3]/npixbin
         img1[ski.draw.ellipse(elipconv[1], elipconv[0], elipconv[2]*elipconv[3], elipconv[2], rotation=elipconv[4])] = np.ma.masked
-        img2[ski.draw.ellipse(elipconv[1], elipconv[0], elipconv[2]*elipconv[3], elipconv[2], rotation=elipconv[4])] = np.ma.masked
+        img2[ski.draw.ellipse(elipconv[1], elipconv[0], elipconv[2]*elipconv[3], elipconv[2], rotation=elipconv[4])] = np.ma.masked"""
 
-    mag1 = -2.5*np.ma.log10(hstflux(img1, photflam1))
-    mag2 = -2.5*np.ma.log10(hstflux(img2, photflam2))
+    mag1 = -2.5*np.ma.log10(hstflux(img1, photflam1)) + zp1
+    mag2 = -2.5*np.ma.log10(hstflux(img2, photflam2)) + zp2
 
     tab_cont = Table.read(f"/home/daniel/Aplicacións/GALFIT/files/tfm/hst_contours_full.fits")  
     contours = [
@@ -889,6 +1015,7 @@ def colorindex(f1, f2, mascara="elipses3", cam="acs", ymin=4600, ymax=5400, xmin
         for i in range(tab_cont["Num_cont"].max() + 1)
         ]
     
+    contours_rot = [rotatecont(numcont=0, npixbin=npixbin, rotacion=1/3), rotatecont(numcont=1, npixbin=npixbin, rotacion=3/5)]
     circles = []
     for p in circparam:
         circles.append(circulos_color(p[0], p[1], circr))
@@ -908,7 +1035,7 @@ def colorindex(f1, f2, mascara="elipses3", cam="acs", ymin=4600, ymax=5400, xmin
         restafits = resta.filled(fill_value=np.nan)
         hduresta = fits.PrimaryHDU(restafits)
         hduresta.writeto(f"{path}color{cam}_{f1}-{f2}.fits", overwrite=True)
-    return resta, contours, circlesbin
+    return resta, contours, contours_rot, circlesbin
 
 def colorflux(f1, f2, cam="acs", ymin=4600, ymax=5400, xmin=4650, xmax=5450, circparam=parametros_circ, circr=radio, npixbin=1):
     path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
@@ -919,6 +1046,12 @@ def colorflux(f1, f2, cam="acs", ymin=4600, ymax=5400, xmin=4650, xmax=5450, cir
 
     photflam1 = file1.header["PHOTFLAM"]
     photflam2 = file2.header["PHOTFLAM"]
+
+    photplam1 = file1.header["PHOTPLAM"]
+    photplam2 = file2.header["PHOTPLAM"]
+
+    zp1 = -5*np.log10(photplam1)-2.408
+    zp2 = -5*np.log10(photplam2)-2.408
 
     img1 = file1.data[ymin:ymax, xmin:xmax]
     img2 = file2.data[ymin:ymax, xmin:xmax]
@@ -935,13 +1068,66 @@ def colorflux(f1, f2, cam="acs", ymin=4600, ymax=5400, xmin=4650, xmax=5450, cir
         mask.append(np.ones(np.shape(img1)))
         mask[-1][c] = 0
     
-    mag = -2.5*np.log10(hstflux(img1, photflam1)/hstflux(img2, photflam2))
+    mag1 = -2.5*np.log10(hstflux(img1, photflam1)) + zp1
+    mag2 = -2.5*np.log10(hstflux(img2, photflam2)) + zp2
+
+    mag = mag1 - mag2
+    #mag = -2.5*np.log10(hstflux(img1, photflam1)/hstflux(img2, photflam2))
     #fluxmag = [np.sum(img1[np.where(circ == 0)])*photflam1 for circ in mask]
     #flux2 = [np.sum(img2[np.where(circ == 0)])*photflam2 for circ in mask]
 
     return [np.nanmedian(mag[np.where(circ == 0)]) for circ in mask]
 
+def colorflux_cont(f1, f2, cam="acs", ymin=4600, ymax=5400, xmin=4650, xmax=5450, npixbin=1, numcont=1, mascara="_elipses3"):
+    path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
+    if cam == "acs":
+        tel = "h"
+        file1 = fits.open(f"{path}{cam}{f1}/hlsp_clash_hst_{cam}-30mas_rxj2129_f{f1}w_v1_drz.fits")[0]
+        file2 = fits.open(f"{path}{cam}{f2}/hlsp_clash_hst_{cam}-30mas_rxj2129_f{f2}w_v1_drz.fits")[0]
 
+    photflam1 = file1.header["PHOTFLAM"]
+    photflam2 = file2.header["PHOTFLAM"]
+
+    photplam1 = file1.header["PHOTPLAM"]
+    photplam2 = file2.header["PHOTPLAM"]
+
+    zp1 = -5*np.log10(photplam1)-2.408
+    zp2 = -5*np.log10(photplam2)-2.408
+
+    img1 = file1.data[ymin:ymax, xmin:xmax]
+    img2 = file2.data[ymin:ymax, xmin:xmax]
+
+    nbinsx = (xmax-xmin)//npixbin
+    nbinsy = (ymax-ymin)//npixbin
+
+    img1 = img1.reshape(nbinsy, npixbin, nbinsx, npixbin).sum(axis=3).sum(axis=1)
+    img2 = img2.reshape(nbinsy, npixbin, nbinsx, npixbin).sum(axis=3).sum(axis=1)
+
+    mask = fits.open(f"{path}{cam}{f1}/contourmask_{numcont}{mascara}.fits")[0].data
+    mask_rot = fits.open(f"{path}{cam}{f1}/contourmask_{numcont}{mascara}_vacio.fits")[0].data
+
+    mag1 = -2.5*np.log10(hstflux(img1, photflam1)) + zp1
+    mag2 = -2.5*np.log10(hstflux(img2, photflam2)) + zp2
+
+    mag = mag1 - mag2
+    print(mag[np.isnan(mag)])
+
+    mag[np.isnan(mag)] = 0
+
+    xgalfit = 4200
+    ygalfit = 4650
+    coordsmask = (np.where(mask == 0)[0] + ygalfit - ymin, np.where(mask == 0)[1] + xgalfit - xmin)
+    coordsrot = (np.where(mask_rot == 0)[0] + ygalfit - ymin, np.where(mask_rot == 0)[1] + xgalfit - xmin)
+    print(coordsrot)
+    color_mask = np.nanmedian(mag[coordsmask])
+    color_rot = np.nanmedian(mag[coordsrot])
+
+    mask1 = np.ones(np.shape(mag))
+    mask1[coordsmask] = 0
+    mask2 = np.ones(np.shape(mag))
+    mask2[coordsrot] = 0
+
+    return color_mask, color_rot, mask1, mask2
 
     """contour_mask = np.invert(np.loadtxt("contourmask.txt").astype(bool))
     #print(contour_mask.astype(int))
@@ -1298,12 +1484,12 @@ ax3[1].imshow(
 ax3[1].set_xticks([])
 ax3[1].set_yticks([])"""
 
-"""f1 = 435
+f1 = 435
 f2 = 625
 
-metalsimple, large_contours, circles = colorindex(f1, f2, write=False, sigma=0.6, npixbin=2)
-fig4, ax4 = plt.subplots(1, 1, figsize=(12, 8))
-maximo = 1.8
+metalsimple, large_contours, large_contours_rot, circles = colorindex(f1, f2, write=False, sigma=0.6, npixbin=1)
+fig4, ax4 = plt.subplots(1, 1, figsize=(8, 16))
+maximo = 2
 minimo = 0
 current_cmap = plt.colormaps['rainbow'].copy()
 current_cmap.set_bad(color='black')
@@ -1315,25 +1501,43 @@ im4 = ax4.imshow(
     origin="lower"
     )
 
-cbar = plt.colorbar(im4, ax=ax4)
+cbar = plt.colorbar(im4, ax=ax4, location="bottom", pad=0.008, shrink=0.95, aspect=30)
+cbar.set_label("Índice de color F435W - F625W ($m_{AB}$)", size=12) 
 #fig4.colorbar(figura)
 for cont in large_contours:
     ax4.plot(cont[:, 0], cont[:, 1], '-', color="white", linewidth=4)
 
-for i in range(len(circles)):
+for cont in large_contours_rot:
+    ax4.plot(cont[:, 0], cont[:, 1], '-', color="orange", linewidth=4)
+
+"""for i in range(len(circles)):
     ax4.plot(circles[i][1], circles[i][0], ".", color="black", markersize=1)
     size = 16
-    ax4.text(np.mean(circles[i][1]), 2*np.max(circles[i][0]) - np.mean(circles[i][0]), f"{i+1}", fontsize=size, fontweight="bold", horizontalalignment='center', verticalalignment='center')
+    ax4.text(np.mean(circles[i][1]), 2*np.max(circles[i][0]) - np.mean(circles[i][0]), f"{i+1}", fontsize=size, fontweight="bold", horizontalalignment='center', verticalalignment='center')"""
 
-#ax4.set_xticks([])
-#ax4.set_yticks([])
+ax4.set_xticks([])
+ax4.set_yticks([])
 
-metalcirculos = colorflux(f1, f2)
+"""metalcirculos = colorflux(f1, f2)
 for i in range(len(metalcirculos)):
     print(f"{i+1}   {metalcirculos[i]}")
-    #ax4.plot(circfilled[i][1], circfilled[i][0], ".", color="black")
+    ax4.plot(circfilled[i][1], circfilled[i][0], ".", color="black")"""
 
-plt.show()"""
+metalmasks = colorflux_cont(f1, f2, numcont=1)
+metalmasks0 = colorflux_cont(f1, f2, numcont=0, mascara="")
+print(f"CONTORNO 1 {metalmasks[0]} {metalmasks[1]}")
+print(f"CONTORNO 0 {metalmasks0[0]} {metalmasks0[1]}")
+
+"""ax4.imshow(
+    metalmasks[2],
+    vmin=0,
+    vmax=1,
+    cmap="gray",
+    origin="lower",
+    alpha=0.2
+    )"""
+
+plt.show()
 
 
 #plt.show()
