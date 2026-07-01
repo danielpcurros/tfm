@@ -3,14 +3,18 @@
 \contentsline {subsection}{\numberline {1.1}Las shells galácticas}{4}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}La formación y evolución de shells galácticas en la simulación Illustris}{5}{subsection.1.2}%
 \contentsline {subsection}{\numberline {1.3}Las shells y la metalicidad}{9}{subsection.1.3}%
-\contentsline {section}{\numberline {2}Descripción de los datos}{11}{section.2}%
+\contentsline {section}{\numberline {2}Descripción de los datos del estudio}{11}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Datos de JWST}{13}{subsection.2.1}%
 \contentsline {subsection}{\numberline {2.2}Datos de HST}{14}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}Datos de MUSE}{16}{subsection.2.3}%
 \contentsline {section}{\numberline {3}Metodología}{18}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Morfología de las shells de la BCG de RXJ2129{}}{18}{subsection.3.1}%
 \contentsline {subsection}{\numberline {3.2}Color de las shells}{22}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Análisis espectroscópico y fotométrico de la shell oriental}{25}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.3}Método para el análisis espectrofotométrico de las shells}{25}{subsection.3.3}%
 \contentsline {subsubsection}{\numberline {3.3.1}Selección de la región de estudio}{25}{subsubsection.3.3.1}%
 \contentsline {subsubsection}{\numberline {3.3.2}Obtención de propiedades físicas y químicas}{26}{subsubsection.3.3.2}%
 \contentsline {section}{\numberline {4}Resultados}{26}{section.4}%
+\contentsline {section}{\numberline {A}Líneas de trabajo descartadas}{29}{appendix.Alph1}%
+\contentsline {subsection}{\numberline {A.1}Caracterización morfológica de las shells con HST}{29}{subsection.Alph1.1}%
+\contentsline {subsection}{\numberline {A.2}Métodos alternativos para la eliminación de las contribuciones espurias al flujo de la shell}{29}{subsection.Alph1.2}%
+\contentsline {section}{\numberline {B}Mapa de color de la BCG sin filtro gaussiano}{30}{appendix.Alph2}%

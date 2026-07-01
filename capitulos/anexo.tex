@@ -1,0 +1,39 @@
+\section*{Anexo}
+\appendix
+\section{Líneas de trabajo descartadas}
+\subsection{Caracterización morfológica de las shells con HST}
+\label{sec:anexo}
+Como se ha descrito en el texto, el procedimiento para medir las propiedades de la shell principal consistió en delimitar el contorno que describe en la imagen residual del filtro F277W de JWST y medir el flujo sobre la imagen original en todos los filtros. Sin embargo, este no era el tratamiento que pretendíamos hacer a priori. El análisis original consistía en obtener una imagen residual en todos los filtros de fotometría y medir el flujo sobre dicha imagen residual, en lugar de sobre las imágenes originales. Dicho procedimiento obtuvo resultados satisfactorios en los filtros de JWST. Sin embargo, al aplicar el mismo análisis para el filtro F160W de HST/WFC3, GALFIT modela una galaxia más alargada (\(b/a = 0,38\)) que hace desaparecer la shell occidental y afecta gravemente al centro de la oriental. Además, no es capaz de eliminar satisfactoriamente la luz de la BCG al norte y al sur, por lo que tampoco es posible distinguir esta shell de la BCG. Este ajuste es estable bajo grandes variaciones de los parámetros iniciales y la aplicación de máscaras (zonas no tenidas en cuenta en el ajuste) en determinadas regiones. Presentamos el resultado en la figura \ref{hst160}.\par 
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[trim={300 0 0 200}, clip, width=0.45\textwidth]{hst160.png}
+\includegraphics[trim={300 0 0 200}, clip, width=0.45\textwidth]{hst160_elipse.png} \\
+\includegraphics[trim={300 0 0 200}, clip, width=0.5\textwidth]{hst160_sinbcg.png}
+\caption{Fila superior, izquierda: imagen de la BCG de \clust{} en el filtro F160W de HST con una escala de 0-0,15 e\(^{-}\)/s. Fila superior, derecha: modelo de GALFIT de la BCG de \clust{}, con la misma escala. En este caso, el modelo es más alargado que la BCG de la imagen original. Inferior: imagen residual resultante de restar la segunda imagen a la primera, con una escala de 0-0,03 e\(^{-}\)/s. El modelo la BCG es claramente inadecuado y no permite distinguir con claridad las estructuras. \label{hst160}}
+\end{figure}
+\noindent
+
+Estas dificultades se repiten en el resto de filtros de HST, por lo que, como se menciona en el texto \nota{destacar en el texto}, suponen una demostración palpable de la potencia del telescopio James Webb como herramienta para la caracterización de objetos de bajo brillo superficial. Obviamente, con estas circunstancias el planteamiento original quedó descartado, lo que no impidió obtener resultados significativos. \par
+
+\subsection{Métodos alternativos para la eliminación de las contribuciones espurias al flujo de la shell} \label{sec:chefs}
+Otra cuestión que cobraría especial importancia en el caso de que hubiéramos seguido el procedimiento anterior \nota{?} sería la eliminación de las galaxias presentes en la shell principal. Como describimos en el texto, en nuestro análisis optamos por enmascararlas teniendo en cuenta la imagen del filtro que dispersa más su luz \nota{debido a la PSF}. Sin embargo, también existe la posibilidad de modelar su perfil lumínico para, en la medida de lo posible, aislarlo y eliminarlo, y de ese modo reducir el área enmascarada. La forma más directa es hacerlo con GALFIT, aplicando el mismo procedimiento que utilizamos con la BCG sobre la imagen residual de esta. En este caso tenemos en cuenta seis modelos de galaxias al mismo tiempo (es necesario combinar las cuatro galaxias de la zona central en dos modelos), que mostramos, junto con su imagen residual, en la figura \ref{fig:galgalfit}. Vemos un buen acuerdo entre el modelo y la imagen original (figura \ref{jwst277}, inferior), y en la imagen residual reducimos notablemente el área que podría dar problemas. \par
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[trim={0 0 0 0}, clip, width=0.45\textwidth]{galaxiasgalfit_modelo.png}
+\includegraphics[trim={0 0 0 0}, clip, width=0.45\textwidth]{galaxiasgalfit.png}
+\caption{\nota{escribir pie de figura. PSF?} 0-0,2 MJy/sr \label{fig:galgalfit}}
+\end{figure}
+\noindent
+
+\section{Mapa de color de la BCG sin filtro gaussiano}
+
+\begin{figure}[h]
+\centering
+\includegraphics[trim={5 0 5 5}, clip, width=0.7\textwidth]{colorsingauss.png}
+\caption{\nota{escribir pie de figura} \label{colorsingauss}}
+\end{figure}
+\noindent

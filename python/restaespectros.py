@@ -41,7 +41,7 @@ fot_resta = fot_shell - fot_ref
 errfot_resta = np.sqrt(errfot_ref**2 + errfot_shell**2)
 errfot_ratio = np.sqrt((errfot_shell/fot_ref)**2 + (errfot_ref*fot_shell/fot_ref**2)**2) 
 
-fig, ax = plt.subplots(1, 1, figsize=(10,5))
+"""fig, ax = plt.subplots(1, 1, figsize=(10,5))
 ax.plot(lbda_shell/10, spec_resta, "k-", label="Espectroscopía")
 ax.plot(filt_shell, fot_resta, "rs", label="Fotometría")
 #ax.errorbar(filt_shell, fot_resta, yerr=errfot_resta, ecolor="green", fmt="none")
@@ -90,4 +90,89 @@ for cont in large_contours:
     ax3.plot(cont[:, 0], cont[:, 1], 'g-', linewidth=1.5)
 
 ax3.set_xticks([])
-ax3.set_yticks([])
+ax3.set_yticks([])"""
+
+#líneas: halfa, hgamma, hdelta, ca absorción, OTi, CaT en 8500 aa
+z = 0.234
+unit = 10*(1+z)
+halfa = [656.279*unit, "H$\\alpha$"]
+hbeta = [486.135*unit, "H$\\beta$"]
+hgamma = [434.0472*unit, "H$\\gamma$"]
+hdelta = [410.1734*unit, "H$\\delta$"]
+cata = [849.8*unit, "CaT a"]
+catb = [854.2*unit, "CaT b"]
+catc = [866.2*unit, "CaT c"]
+d4000 = [400*unit, "D4000"]
+bandag = [430.4*unit, "G"]
+cah = [393.4*unit, "Ca H"]
+cak = [396.9*unit, "Ca K"]
+mg = [517.5*unit, "Mg"]
+na = [589.4*unit, "Na"]
+
+print(cata, catb, catc)
+
+lineas = []
+lineastop = [hgamma, cak]
+lineasbottom = [bandag, cah, na, halfa, hbeta, hdelta, mg]
+#print(lineasbottom)
+lineas.extend(lineastop)
+lineas.extend(lineasbottom)
+
+fig4, ax4 = plt.subplots(1, 1, figsize=(10,5))
+ax4.plot(lbda_shell, spec_shell*1e8, "k-", label="Espectroscopía")
+ylimite = 5
+offset = 0.12
+size = 10
+length = 0.3
+maxlambda = 7500
+anchura = 0.7
+for l in lineastop:
+    xaux = np.argmin(np.abs(lbda_shell-l[0]))
+    yaux = spec_shell[xaux]*1e8
+    print(l[1], yaux)
+    ymax = yaux + length
+    ymin = yaux - length
+    if l[0] > maxlambda:
+        ymax+=length
+        ymin-=length
+    print(ymax)
+    ax4.axvline(l[0], color="red" ,linewidth=anchura, ymax=ymax/ylimite, ymin=ymin/ylimite)
+    """offset = 15
+    xpos = l[0]-offset
+    if l[0] < 550:
+        ypos = 2
+    else:
+        ypos = 1"""
+    ypos = ymax + offset
+    ax4.text(l[0], ypos, f"{l[1]}", horizontalalignment='center', verticalalignment='center', fontsize=size)
+
+for l in lineasbottom:
+    xaux = np.argmin(np.abs(lbda_shell-l[0]))
+    yaux = spec_shell[xaux]*1e8
+    print(l[1], yaux)
+    ymax = yaux + length
+    ymin = yaux - length
+    if l[0] > maxlambda:
+        ymax+=length
+        ymin-=length
+    print(ymax)
+    ax4.axvline(l[0], color="red" ,linewidth=anchura, ymax=ymax/ylimite, ymin=ymin/ylimite)
+    """offset = 15
+    xpos = l[0]-offset
+    if l[0] < 550:
+        ypos = 2
+    else:
+        ypos = 1"""
+    ypos = ymin - offset
+    ax4.text(l[0], ypos, f"{l[1]}", horizontalalignment='center', verticalalignment='center', fontsize=size)
+"""ax4_t = ax4.secondary_xaxis('top')
+ax4_b = ax4.secondary_xaxis('bottom')
+ax4_t.set_ticks([l[0] for l in lineastop])
+ax4_t.set_xticklabels([l[1] for l in lineastop], fontsize=10)
+ax4_b.set_ticks([l[0] for l in lineasbottom])
+ax4_b.set_xticklabels([l[1] for l in lineasbottom], fontsize=10)"""
+ax4.set_xlabel("$\\lambda$ (Å)")
+ax4.set_ylabel("Flujo de la shell ($10^{-8} \\: \\text{maggies}$)")
+ax4.set_xlim(4500, 9600)
+ax4.set_ylim(0,ylimite)
+#ax.plot(filt_shell, fot_resta, "rs", label="Fotometría")

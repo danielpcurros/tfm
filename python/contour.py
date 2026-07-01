@@ -1016,6 +1016,9 @@ def colorindex(f1, f2, mascara="elipses3", cam="acs", ymin=4600, ymax=5400, xmin
         ]
     
     contours_rot = [rotatecont(numcont=0, npixbin=npixbin, rotacion=1/3), rotatecont(numcont=1, npixbin=npixbin, rotacion=3/5)]
+
+    contours_espejo = [rotatecont(numcont=0, npixbin=npixbin, rotacion=1), rotatecont(numcont=1, npixbin=npixbin, rotacion=1)]
+
     circles = []
     for p in circparam:
         circles.append(circulos_color(p[0], p[1], circr))
@@ -1030,12 +1033,12 @@ def colorindex(f1, f2, mascara="elipses3", cam="acs", ymin=4600, ymax=5400, xmin
 
     resta = mag1 - mag2
 
-    resta = gaussian_filter(resta, sigma=sigma)
+    #resta = gaussian_filter(resta, sigma=sigma)
     if write:
         restafits = resta.filled(fill_value=np.nan)
         hduresta = fits.PrimaryHDU(restafits)
         hduresta.writeto(f"{path}color{cam}_{f1}-{f2}.fits", overwrite=True)
-    return resta, contours, contours_rot, circlesbin
+    return resta, contours, contours_rot, contours_espejo, circlesbin
 
 def colorflux(f1, f2, cam="acs", ymin=4600, ymax=5400, xmin=4650, xmax=5450, circparam=parametros_circ, circr=radio, npixbin=1):
     path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
@@ -1487,7 +1490,7 @@ ax3[1].set_yticks([])"""
 f1 = 435
 f2 = 625
 
-metalsimple, large_contours, large_contours_rot, circles = colorindex(f1, f2, write=False, sigma=0.6, npixbin=1)
+metalsimple, large_contours, large_contours_rot, large_contours_espejo, circles = colorindex(f1, f2, write=False, sigma=0.6, npixbin=1)
 fig4, ax4 = plt.subplots(1, 1, figsize=(8, 16))
 maximo = 2
 minimo = 0
@@ -1509,6 +1512,9 @@ for cont in large_contours:
 
 for cont in large_contours_rot:
     ax4.plot(cont[:, 0], cont[:, 1], '-', color="orange", linewidth=4)
+
+for cont in large_contours_espejo:
+    ax4.plot(cont[:, 0], cont[:, 1], '-', color="lime", linewidth=4)
 
 """for i in range(len(circles)):
     ax4.plot(circles[i][1], circles[i][0], ".", color="black", markersize=1)
