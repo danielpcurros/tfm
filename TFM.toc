@@ -11,10 +11,15 @@
 \contentsline {subsection}{\numberline {3.1}Morfología de las shells de la BCG de RXJ2129{}}{18}{subsection.3.1}%
 \contentsline {subsection}{\numberline {3.2}Color de las shells}{22}{subsection.3.2}%
 \contentsline {subsection}{\numberline {3.3}Método para el análisis espectrofotométrico de las shells}{25}{subsection.3.3}%
-\contentsline {subsubsection}{\numberline {3.3.1}Selección de la región de estudio}{25}{subsubsection.3.3.1}%
-\contentsline {subsubsection}{\numberline {3.3.2}Obtención de propiedades físicas y químicas}{26}{subsubsection.3.3.2}%
-\contentsline {section}{\numberline {4}Resultados}{26}{section.4}%
-\contentsline {section}{\numberline {A}Líneas de trabajo descartadas}{29}{appendix.Alph1}%
-\contentsline {subsection}{\numberline {A.1}Caracterización morfológica de las shells con HST}{29}{subsection.Alph1.1}%
-\contentsline {subsection}{\numberline {A.2}Métodos alternativos para la eliminación de las contribuciones espurias al flujo de la shell}{29}{subsection.Alph1.2}%
-\contentsline {section}{\numberline {B}Mapa de color de la BCG sin filtro gaussiano}{30}{appendix.Alph2}%
+\contentsline {subsubsection}{\numberline {3.3.1}Selección de la región de estudio}{26}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Ajuste de la SED. Cálculo de parámetros físicos.}{27}{subsubsection.3.3.2}%
+\contentsline {section}{\numberline {4}Resultados}{29}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Dependencia del índice de color con la distancia galactocéntrica}{29}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Medidas espectrofotométricas de la shell y la región de referencia}{29}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Propiedades físicas y evolución}{30}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Discusión de los resultados}{32}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Conclusiones}{32}{section.5}%
+\contentsline {section}{\numberline {A}Líneas de trabajo descartadas}{37}{appendix.Alph1}%
+\contentsline {subsection}{\numberline {A.1}Caracterización morfológica de las shells con HST}{37}{subsection.Alph1.1}%
+\contentsline {subsection}{\numberline {A.2}Métodos alternativos para la eliminación de las contribuciones espurias al flujo de la shell}{38}{subsection.Alph1.2}%
+\contentsline {section}{\numberline {B}Mapa de color de la BCG sin filtro gaussiano}{39}{appendix.Alph2}%

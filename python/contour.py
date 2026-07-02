@@ -804,6 +804,8 @@ def flux(telfilts, mascara="simple", chefs=False, bcg=True, numcont=1, vacio=Fal
                 lims = (int(limconv[0][1]), int(limconv[1][1]))
             mask[:lims[0], :] = 1
             mask[lims[1]:, :] = 1
+            hdusimple = fits.PrimaryHDU(mask) 
+            hdusimple.writeto(f"{path}/jwst277/contourmask_{numcont}_{mascara}.fits", overwrite=True)
         elif modo == "none":
             mask = np.copy(mask)
         else:
@@ -811,6 +813,9 @@ def flux(telfilts, mascara="simple", chefs=False, bcg=True, numcont=1, vacio=Fal
             if tel == "jwst":
                 for i in elipse:
                     mask[ski.draw.ellipse(i[1], i[0], i[2]*i[3], i[2], rotation=i[4])] = 1
+                """if mascara == "elipses2":
+                    hduelipse = fits.PrimaryHDU(mask) 
+                    hduelipse.writeto(f"{path}/jwst277/contourmask_{numcont}_{mascara}.fits", overwrite=True)"""
             elif tel == "hst" or tel == "acs":
                 for elip in elipse:
                     with open(f"{path}/{tel}{filter}/galfit.feedme") as f:
@@ -1033,7 +1038,7 @@ def colorindex(f1, f2, mascara="elipses3", cam="acs", ymin=4600, ymax=5400, xmin
 
     resta = mag1 - mag2
 
-    #resta = gaussian_filter(resta, sigma=sigma)
+    resta = gaussian_filter(resta, sigma=sigma)
     if write:
         restafits = resta.filled(fill_value=np.nan)
         hduresta = fits.PrimaryHDU(restafits)
@@ -1132,6 +1137,116 @@ def colorflux_cont(f1, f2, cam="acs", ymin=4600, ymax=5400, xmin=4650, xmax=5450
 
     return color_mask, color_rot, mask1, mask2
 
+def mihos(f1, f2, theta1, theta2, deltarho=24, segmentos=14, cam="acs", ymin=4600, ymax=5400, xmin=4650, xmax=5450, npixbin=1):
+    path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
+    with open(f"{path}jwst277/fit.log") as f:
+        n = -1
+        lines = f.readlines()
+        while "galfit.feedme" not in lines[n]:
+            n-=1
+        line = lines[n+4].split()
+        x0 = float(line[3][:-1])
+        y0 = float(line[4][:-1])
+        #theta0 = float(line[-1]) - 90
+
+    [[x0, y0]] = conversor([[x0, y0]])
+
+    x0 = (x0 - xmin)/npixbin
+    y0 = (y0 - ymin)/npixbin
+
+    file1 = fits.open(f"{path}{cam}{f1}/hlsp_clash_hst_{cam}-30mas_rxj2129_f{f1}w_v1_drz.fits")[0]
+    file2 = fits.open(f"{path}{cam}{f2}/hlsp_clash_hst_{cam}-30mas_rxj2129_f{f2}w_v1_drz.fits")[0]
+
+    photflam1 = file1.header["PHOTFLAM"]
+    photflam2 = file2.header["PHOTFLAM"]    
+
+    photplam1 = file1.header["PHOTPLAM"]
+    photplam2 = file2.header["PHOTPLAM"]
+
+    zp1 = -5*np.log10(photplam1)-2.408
+    zp2 = -5*np.log10(photplam2)-2.408
+
+    img1 = file1.data[ymin:ymax, xmin:xmax]
+    img2 = file2.data[ymin:ymax, xmin:xmax]
+
+    nbinsx = (xmax-xmin)//npixbin
+    nbinsy = (ymax-ymin)//npixbin
+
+    img1 = img1.reshape(nbinsy, npixbin, nbinsx, npixbin).sum(axis=3).sum(axis=1)
+    img2 = img2.reshape(nbinsy, npixbin, nbinsx, npixbin).sum(axis=3).sum(axis=1)
+
+    mag1 = -2.5*np.log10(hstflux(img1, photflam1)) + zp1
+    mag2 = -2.5*np.log10(hstflux(img2, photflam2)) + zp2
+
+    mag = mag1 - mag2
+
+    rhoimg = np.ones(np.shape(mag))
+    thetaimg = np.copy(rhoimg)
+
+    for i in range(np.shape(mag)[0]):
+        for j in range(np.shape(mag)[1]):
+            rhoimg[i,j] = np.sqrt((j-x0)**2 + (i-y0)**2)
+            if (j-x0) > 0 and (i-y0) > 0:
+                thetaimg[i,j] = np.abs(np.arctan((i-y0)/(j-x0)))*180/np.pi + 270
+            elif (j-x0) < 0 and (i-y0) > 0:
+                thetaimg[i,j] = 180 - np.abs(np.arctan((i-y0)/(j-x0)))*180/np.pi - 90
+            elif (j-x0) < 0 and (i-y0) < 0:
+                thetaimg[i,j] = 180 + np.abs(np.arctan((i-y0)/(j-x0)))*180/np.pi - 90
+            elif (j-x0) > 0 and (i-y0) < 0:
+                thetaimg[i,j] = 360 - np.abs(np.arctan((i-y0)/(j-x0)))*180/np.pi - 90
+            elif (j-x0) == 0 and (i-y0) > 0:
+                thetaimg[i,j] = 0
+            elif (j-x0) == 0 and (i-y0) < 0:
+                thetaimg[i,j] = 180
+            elif (j-x0) > 0 and (i-y0) == 0:
+                thetaimg[i,j] = 270
+            elif (j-x0) < 0 and (i-y0) == 0:
+                thetaimg[i,j] = 90
+     
+
+    rholista = np.arange(deltarho, deltarho*segmentos+0.001, deltarho)
+
+    theta1r = (theta1 + 90)*np.pi/180
+    theta2r = (theta2 + 90)*np.pi/180
+    rholine = np.linspace(0, deltarho*segmentos, 100)
+    line1 = np.zeros((len(rholine), 2))
+    line2 = np.copy(line1)
+    line1[:, 0] = x0 + rholine*np.cos(theta1r)
+    line1[:, 1] = y0 + rholine*np.sin(theta1r)
+    line2[:, 0] = x0 + rholine*np.cos(theta2r)
+    line2[:, 1] = y0 + rholine*np.sin(theta2r)
+
+    thetaarc = np.linspace(theta1r, theta2r, 100)
+    arcs = []
+    colorcapa = np.array([])
+    distancias = np.array([])
+    for i in range(len(rholista)):
+        arc = np.zeros((len(thetaarc), 2))
+        arc[:, 0] = x0 + rholista[i]*np.cos(thetaarc)
+        arc[:, 1] = y0 + rholista[i]*np.sin(thetaarc)
+        arcs.append(arc)
+
+        mask1 = np.full(np.shape(mag), False)
+        mask2 = np.full(np.shape(mag), False)
+        mask3 = np.full(np.shape(mag), False)
+        mask4 = np.full(np.shape(mag), False)
+        rho0 = rholista[i] - deltarho
+        rho1 = rholista[i]
+        mask1[rhoimg > rho1] = True
+        mask2[rhoimg < rho0] = True
+        mask3[thetaimg < theta1] = True
+        mask4[thetaimg > theta2] = True
+        mask = (mask1 | mask2) | (mask3 | mask4) 
+        
+        col = np.nanmedian(mag[mask == False])
+        colorcapa = np.append(colorcapa, col)
+        dist = np.mean(rhoimg[mask == False])*5.555e-6*3600*3.722
+        distancias = np.append(distancias, dist)
+    print(deltarho*5.555e-6*3600*3.722)
+    return line1, line2, arcs, colorcapa, distancias
+    
+
+
     """contour_mask = np.invert(np.loadtxt("contourmask.txt").astype(bool))
     #print(contour_mask.astype(int))
     #contour_mask = np.invert(contour_mask)
@@ -1201,7 +1316,7 @@ def colorflux_cont(f1, f2, cam="acs", ymin=4600, ymax=5400, xmin=4650, xmax=5450
 #contour(("jw", 277))
 #contour(("h", "110"))
 
-"""vac = True
+"""vac = False
 jwfiltros = np.array([115, 150, 200, 277, 356, 444])
 flujo_parcialjw = np.array([])
 flujo_fulljw = np.array([])
@@ -1209,14 +1324,29 @@ flujo_fulljw2 = np.array([])
 flujo_fulljw3 = np.array([])
 lbda_jw = np.array([])
 err_jw = np.array([])
+flujo_parcialjw = np.array([])
+lbdaparcial_jw = np.array([])
+errparcial_jw = np.array([])
+flujo_fulljwmalo = np.array([])
+err_jwmalo = np.array([])
 for i in jwfiltros:
-    #flujo_parcialjw = np.append(flujo_parcialjw, flux(("jwst", i))[2])
+    #flujolbdaparcial_jw = flux(("jwst", i), vacio=vac)
+    #flujo_parcialjw = np.append(flujo_parcialjw, flujolbdaparcial_jw[2])
+    #errparcial_jw = np.append(errparcial_jw, flujolbdaparcial_jw[4])
     #flujo_fulljw = np.append(flujo_fulljw, flux(("jwst", i), "elipses")[2])
-    #flujo_fulljw2 = np.append(flujo_fulljw2, flux(("jwst", i), "elipses2")[2])
+    #flujolbdamalo_jw = flux(("jwst", i), "elipses2", vacio=vac)
+    #flujo_fulljwmalo = np.append(flujo_fulljwmalo, flujolbdamalo_jw[2])
+    #err_jwmalo = np.append(err_jwmalo, flujolbdamalo_jw[4])
     flujolbda_jw = flux(("jwst", i), "elipses3", vacio=vac)
     flujo_fulljw3 = np.append(flujo_fulljw3, flujolbda_jw[2])
     lbda_jw = np.append(lbda_jw, flujolbda_jw[3])
     err_jw = np.append(err_jw, flujolbda_jw[4])
+
+#coc_jw = flujo_fulljw3/flujo_parcialjw
+#errcoc_jw = np.sqrt((err_jw/flujo_parcialjw)**2 + (errparcial_jw*flujo_fulljw3/flujo_parcialjw**2)**2)
+
+#coc_jwmalo = flujo_fulljwmalo/flujo_parcialjw
+#errcoc_jwmalo = np.sqrt((err_jwmalo/flujo_parcialjw)**2 + (errparcial_jw*flujo_fulljwmalo/flujo_parcialjw**2)**2)
 
 hfiltros = np.array([105, 110, 125, 140, 160])
 flujo_parcialh = np.array([])
@@ -1264,7 +1394,7 @@ fotarray['Filtros'] = filtrosfot
 fotarray["Flujo"] = flujofot
 fotarray["Error"] = errfot
 head = "Filtro (HST y JWST)    Flujo (maggies)       Error flujo (maggies)"
-np.savetxt(f"{path}fotometria_ref.txt", fotarray, header=head, fmt="%10s %10.16f  %10.16f") 
+#np.savetxt(f"{path}fotometria_ref.txt", fotarray, header=head, fmt="%10s %10.16f  %10.16f") 
 
 musefiltros = np.arange(0, 3682, 1)
 flujo_parcialmuse = np.array([])
@@ -1280,9 +1410,15 @@ for i in musefiltros:
     flujo_fullmuse3 = np.append(flujo_fullmuse3, flujolbda_muse[0])
     lbda_muse = np.append(lbda_muse, flujolbda_muse[1])
 
-specarray = np.column_stack((lbda_muse, flujo_fullmuse3))
-headmuse = "Longitud de onda (ang)      Flujo (maggies)"
-np.savetxt(f"{path}espectrometria_ref.txt", specarray, header=headmuse) 
+path = f"/home/daniel/Aplicacións/GALFIT/files/tfm/"
+muse_shell = np.loadtxt(f"{path}espectrometria_shell.txt")
+#muse_shell = np.loadtxt(f"{path}espectrometria_ref.txt")
+flujo_fullmuse3 = muse_shell[:,1]
+lbda_muse = muse_shell[:,0]
+
+#specarray = np.column_stack((lbda_muse, flujo_fullmuse3))
+#headmuse = "Longitud de onda (ang)      Flujo (maggies)"
+#np.savetxt(f"{path}espectrometria_ref.txt", specarray, header=headmuse) 
 
 #flujo_parcial_chefs = flux(("jw", 277), chefs=True)[2]
 #flujo_full_chefs = flux(("jw", 277), "elipses", chefs=True)[2]
@@ -1302,7 +1438,7 @@ np.savetxt(f"{path}espectrometria_ref.txt", specarray, header=headmuse)
 #ax.set_title("Flujo total/flujo pequeño")
 #ax.set_ylim(0.9,1.15)
 
-fig2, ax2 = plt.subplots(1, 1, figsize=(14, 4))
+fig2, ax2 = plt.subplots(1, 1, figsize=(10, 7))
 #fig2, ax2 = plt.subplots(1, 1, figsize=(8, 8))
 
 estilo = "s"
@@ -1312,10 +1448,11 @@ lbda_jw = lbda_jw/1e2
 lbda_h = lbda_h/1e4
 lbda_acs = lbda_acs/1e4
 lbda_muse = lbda_muse/1e4
-print(err_jw)
-print(err_h)
-print(err_acs)
 if areas:
+    ax2.plot(lbda_jw, coc_jw, f"{estilo}", markersize=tamaño, color="blue", label="Máscara 1")
+    ax2.errorbar(lbda_jw, coc_jw, yerr=errcoc_jw, ecolor="blue", fmt="none")
+    ax2.plot(lbda_jw, coc_jwmalo, f"{estilo}", markersize=tamaño, color="red", label="Máscara 2")
+    ax2.errorbar(lbda_jw, coc_jwmalo, yerr=errcoc_jwmalo, ecolor="red", fmt="none")
     ax2.plot(lbda_jw, flujo_parcialjw, f"{estilo}", markersize=tamaño, color="black", label="parcial")
     ax2.plot(lbda_jw, flujo_fulljw, f"{estilo}", markersize=tamaño, color="green", label="conservador")
     #ax2.plot(lbda_jw, flujo_fulljw2, f"{estilo}", markersize=tamaño, color="red", label="agresivo")
@@ -1336,25 +1473,30 @@ if areas:
     #ax2.plot(lbda, flujo_fullmuse2, f"{estilo}", markersize=tamaño, color="red", label="agresivo")
     ax2.plot(lbda_muse, flujo_fullmuse3, f"{estilo}", markersize=tamaño, color="red", label="conservador 2")
 else:
-    ax2.plot(lbda_muse, flujo_fullmuse3, f"-", markersize=tamaño/3, color="black", label="MUSE")
-    ax2.plot(lbda_jw, flujo_fulljw3, f"{estilo}", markersize=tamaño, color="red", label="JWST/NIRCam")
-    ax2.errorbar(lbda_jw, flujo_fulljw3, yerr=err_jw, ecolor="red", fmt="none")
-    ax2.plot(lbda_h, flujo_fullh3, f"{estilo}", markersize=tamaño, color="blue", label="HST/WFC3")
-    ax2.errorbar(lbda_h, flujo_fullh3, yerr=err_h, ecolor="blue", fmt="none")
-    ax2.plot(lbda_acs, flujo_fullacs3, f"{estilo}", markersize=tamaño, color="green", label="HST/ACS")
-    ax2.errorbar(lbda_acs, flujo_fullacs3, yerr=err_acs, ecolor="green", fmt="none")
+    ax2.plot(lbda_muse, flujo_fullmuse3*1e8, f"-", markersize=tamaño/3, color="black", label="MUSE")
+    ax2.plot(lbda_jw, flujo_fulljw3*1e8, f"{estilo}", markersize=tamaño, color="red", label="JWST/NIRCam")
+    ax2.errorbar(lbda_jw, flujo_fulljw3*1e8, yerr=err_jw*1e8, ecolor="red", fmt="none")
+    ax2.plot(lbda_h, flujo_fullh3*1e8, f"{estilo}", markersize=tamaño, color="blue", label="HST/WFC3")
+    ax2.errorbar(lbda_h, flujo_fullh3*1e8, yerr=err_h*1e8, ecolor="blue", fmt="none")
+    ax2.plot(lbda_acs, flujo_fullacs3*1e8, f"{estilo}", markersize=tamaño, color="limegreen", label="HST/ACS")
+    ax2.errorbar(lbda_acs, flujo_fullacs3*1e8, yerr=err_acs*1e8, ecolor="limegreen", fmt="none")
 #ax2.plot(lbda_jw[-3], flujo_parcial_chefs, f"{estilo}", color="cyan", label="parcial chefs")
 #ax2.plot(lbda_jw[-3], flujo_full_chefs, f"{estilo}", color="green", label="conservador chefs")
 #ax2.plot(lbda_jw[-3], flujo_full2_chefs, f"{estilo}", color="pink", label="agresivo chefs")
 #ax2.plot(lbda_jw[-3], flujo_fulltotal_chefs, f"{estilo}", color="orange", label="total chefs")
-ax2.set_xlabel("$\\lambda$ ($\\mu$m)")
+ax2.set_xlabel("$\\lambda$ ($\\mu$m)", fontsize=11)
+#ax2.set_xlabel("$\\lambda$ ($\\mu$m)")
 #ax2.set_ylabel("Flujo (erg s$^{-1}$ cm$^{-2}$ $\\AA^{-1}$ sr$^{-1}$)")
 #ax2.set_ylabel("Flujo (MJy/sr)")
-ax2.set_ylabel("Flujo (maggies)")
+ax2.set_ylabel("Flujo de la shell ($10^{-8} \\: \\text{maggies}$)", fontsize=11)
+#ax2.set_ylabel("Cociente entre flujos")
+ax2.tick_params(labelsize=11)
 #ax2.set_yscale("log")
 #ax2.set_xlim(400,900)
 #ax2.set_ylim(17.5,22)
-ax2.legend()"""
+ax2.legend(fontsize=11)
+#ax2.legend(loc="lower right")
+#ax2.set_ylim(0, 8.5)"""
 
 #ax[1].plot(lbda_jw, flujo_parcial/np.max(flujo_parcial), f"{estilo}", color="red", label="parcial")
 #ax[1].plot(lbda_jw, flujo_full/flujo_parcial, ".-", color="blue", label="total/parcial")
@@ -1510,29 +1652,75 @@ cbar.set_label("Índice de color F435W - F625W ($m_{AB}$)", size=12)
 for cont in large_contours:
     ax4.plot(cont[:, 0], cont[:, 1], '-', color="white", linewidth=4)
 
-for cont in large_contours_rot:
-    ax4.plot(cont[:, 0], cont[:, 1], '-', color="orange", linewidth=4)
+#for cont in large_contours_rot:
+#    ax4.plot(cont[:, 0], cont[:, 1], '-', color="orange", linewidth=4)
 
-for cont in large_contours_espejo:
-    ax4.plot(cont[:, 0], cont[:, 1], '-', color="lime", linewidth=4)
+#for cont in large_contours_espejo:
+#    ax4.plot(cont[:, 0], cont[:, 1], '-', color="lime", linewidth=4)
 
-"""for i in range(len(circles)):
-    ax4.plot(circles[i][1], circles[i][0], ".", color="black", markersize=1)
-    size = 16
-    ax4.text(np.mean(circles[i][1]), 2*np.max(circles[i][0]) - np.mean(circles[i][0]), f"{i+1}", fontsize=size, fontweight="bold", horizontalalignment='center', verticalalignment='center')"""
+
+line1, line2, arcs, colores_shell, dist_shell = mihos(435, 625, 60, 90)
+
+collines = "black"
+ax4.plot(line1[:,0], line1[:,1], "-", color=collines, linewidth=2)
+ax4.plot(line2[:,0], line2[:,1], "-", color=collines, linewidth=2)
+for arc in arcs:
+    ax4.plot(arc[:,0], arc[:,1], "-", color=collines, linewidth=1)
+
+rotar = 3/5*180
+line1, line2, arcs, colores_ref, dist_ref = mihos(435, 625, 60+rotar, 90+rotar)
+
+ax4.plot(line1[:,0], line1[:,1], "-", color=collines, linewidth=2)
+ax4.plot(line2[:,0], line2[:,1], "-", color=collines, linewidth=2)
+for arc in arcs:
+    ax4.plot(arc[:,0], arc[:,1], "-", color=collines, linewidth=1)
+
+#for i in range(len(circles)):
+#    ax4.plot(circles[i][1], circles[i][0], ".", color="black", markersize=1)
+#    size = 16
+#    ax4.text(np.mean(circles[i][1]), 2*np.max(circles[i][0]) - np.mean(circles[i][0]), f"{i+1}", fontsize=size, fontweight="bold", horizontalalignment='center', verticalalignment='center')
 
 ax4.set_xticks([])
 ax4.set_yticks([])
 
-"""metalcirculos = colorflux(f1, f2)
-for i in range(len(metalcirculos)):
-    print(f"{i+1}   {metalcirculos[i]}")
-    ax4.plot(circfilled[i][1], circfilled[i][0], ".", color="black")"""
+"""fig5, ax5 = plt.subplots(1, 1, figsize=(8, 16))
+im5 = ax5.imshow(
+    thetaimg,
+    cmap=current_cmap,
+    origin="lower"
+    )
+cbar2 = plt.colorbar(im5, ax=ax5, location="bottom", pad=0.008, shrink=0.95, aspect=30)
+cbar2.set_label("Índice de color F435W - F625W ($m_{AB}$)", size=12) 
+ax5.set_xticks([])
+ax5.set_yticks([])"""
 
-metalmasks = colorflux_cont(f1, f2, numcont=1)
-metalmasks0 = colorflux_cont(f1, f2, numcont=0, mascara="")
-print(f"CONTORNO 1 {metalmasks[0]} {metalmasks[1]}")
-print(f"CONTORNO 0 {metalmasks0[0]} {metalmasks0[1]}")
+"""fig6, ax6 = plt.subplots(1, 1, figsize=(8, 16))
+ax6.imshow(
+    masklist[1],
+    origin="lower"
+    )
+ax6.set_xticks([])
+ax6.set_yticks([])"""
+
+fig7, ax7 = plt.subplots(1, 1, figsize=(10, 7))
+ax7.plot(dist_ref, colores_ref, "gs", label="Referencia")
+ax7.plot(dist_shell, colores_shell, "ks", label="Sector de la shell")
+ax7.plot(dist_shell[5:10], colores_shell[5:10], "rs", label="Shell")
+
+ax7.set_xlabel("Distancia galactocéntrica (kpc)", fontsize=11)
+ax7.set_ylabel("Índice de color F435W - F625W ($m_{AB}$)", fontsize=11)
+ax7.tick_params(labelsize=11)
+ax7.legend()
+
+#metalcirculos = colorflux(f1, f2)
+#for i in range(len(metalcirculos)):
+#    print(f"{i+1}   {metalcirculos[i]}")
+#    ax4.plot(circfilled[i][1], circfilled[i][0], ".", color="black")
+
+#metalmasks = colorflux_cont(f1, f2, numcont=1)
+#metalmasks0 = colorflux_cont(f1, f2, numcont=0, mascara="")
+#print(f"CONTORNO 1 {metalmasks[0]} {metalmasks[1]}")
+#print(f"CONTORNO 0 {metalmasks0[0]} {metalmasks0[1]}")
 
 """ax4.imshow(
     metalmasks[2],
@@ -1543,7 +1731,7 @@ print(f"CONTORNO 0 {metalmasks0[0]} {metalmasks0[1]}")
     alpha=0.2
     )"""
 
-plt.show()
+#plt.show()
 
 
 #plt.show()

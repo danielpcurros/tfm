@@ -1,4 +1,96 @@
-\section{Resultados}
-\nota{enseñar el espectro incluyendo algunas líneas relevantes y todos los resultados de los ajustes}
+\section{Resultados} \label{sec:resultados}
+\subsection{Dependencia del índice de color con la distancia galactocéntrica} \label{sec:mihos}
+En la sección \ref{sec:colorshells} describíamos un procedimiento para medir el índice de color de la BCG a distintas distancias galactocéntricas. En la figura \ref{graficamihos} presentamos los resultados para los dos sectores circulares de la figura \ref{mapamihos}, resaltando en rojo los radios parcial o totalmente cubiertos por el contorno que obtuvimos para la shell oriental. Naturalmente, la zona perteneciente al eje mayor de la galaxia es significativamente más roja \nota{hay tres puntos raros al principio, quizá tengo que corregir algo}, como esperaríamos incluso aun si no hubiese ninguna estructura adicional. Sin embargo, mientras el índice del sector de referencia cae paulatinamente con la distancia, en el sector de la shell se observa un claro enrojecimiento en los puntos pertenecientes a la propia shell, lo que concuerda con las predicciones de \citet{popGalaxiesShellsIllustris2017} y las observaciones de \citet{mihosStelLARPOPULATIONSOUTER2013}, por lo menos en el rango óptico. También se observa un ligero enrojecimiento en el punto inmediatamente exterior a la shell, lo que podría ser un indicativo de la presencia de otra shell más pequeña y difusa. \par
 
-\citep{kramidaNISTAtomicSpectra1999} \nota{balmer} \citep{andrettaCaIIInfrared2005} \nota{calcio}
+\begin{figure}[h!]
+\centering
+\includegraphics[trim={0 0 0 0}, clip, width=0.7\textwidth]{mihosgrafica.png}
+\caption{\nota{escribir pie de figura}  \label{graficamihos}}
+\end{figure}
+\noindent
+
+
+
+\subsection{Medidas espectrofotométricas de la shell y la región de referencia}
+Después de aplicar el procedimiento descrito en el apartado \ref{sec:metodoespectro}, presentamos ahora los resultados de la fotometría y la espectroscopía sobre la shell y la región de referencia en la figura \ref{flujos}, en la que distinguimos entre los datos obtenidos por cada telescopio y, en el caso de HST, por cada cámara. De inmediato se destaca una coincidencia casi absoluta entre los resultados de la fotometría con HST y la espectroscopía, una situación que no estaba garantizada. Esto permite confirmar lo que ya percibíamos con las observaciones: en los filtros más azules la luminosidad es muy pobre, pero esta aumenta rápidamente con la longitud de onda hasta llegar a la banda de \(2\: \mu\text{m}\). En los filtros del canal LW de JWST la luminosidad desciende, pero con una curva suavizada. Los filtros del canal SW sí parecen estar menos alineados con los de HST/WFC3. Los excesos de luminosidad que se observan, que no obstante están dentro de los rangos de incertidumbres de las medidas, pueden deberse a la presencia de wisps en sus imágenes que mencionamos en la sección \ref{sec:jwst}.\par
+
+En la comparación entre el espectro de las dos regiones no se ven diferencias evidentes, más allá de que el flujo en cada filtro en la región de referencia es aproximadamente la mitad que el calculado dentro de la shell, si bien sabemos gracias al apartado anterior que en el rango óptico sí existe un enrojecimiento.
+
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[trim={0 0 0 0}, clip, width=0.8\textwidth]{flujoshell.png} \\
+\includegraphics[trim={0 0 0 0}, clip, width=0.8\textwidth]{flujoref.png}
+\caption{\nota{escribir pie de figura}  \label{flujos}}
+\end{figure}
+\noindent
+
+
+Una vez confirmada la coincidencia entre las medidas espectroscópicas y fotométricas, ahora analizamos el espectro en busca de líneas de emisión o absorción destacadas. Podemos bsucar varias líneas espectrales notables, como la serie de Balmer H\(\alpha-\delta\) \citep{kramidaNISTAtomicSpectra1999}, asociada con la presencia del hidrógeno atómico; el triplete del calcio ionizado CaT, asociado con los espectros de estrellas de tipo G, K o M \citep{andrettaCaIIInfrared2005}; o las bandas de Fraunhofer G, Ca H, Ca K, Mg b y Na D, presentes en estrellas de tipo solar \citep{pietrowProminenceSignaturesFraunhofer2026,bjorgenThreedimensionalModelingCa2018,aldeniusExperimentalMgOscillator2007}. En la tabla \ref{bandas} mostramos las longitudes de onda en \(z=0\) de estas bandas. Representamos con gran detalle el espectro con estas líneas espectrales marcadas para \(z = 0,234\) en la figura \ref{espectro}. \par
+
+Es fácil ver que ninguna de dichas líneas está presente. El espectro es, en su mayor parte, muy suave, y cualquier posible línea de emisión o absorción de entre las que estudiamos es muy débil en comparación con el continuo. Es cierto que sí existen varias líneas en el espectro, pero estas se deben probablemente a una sustracción imperfecta de la contribución telúrica. Las absorciones de H\(\alpha\) y H\(\beta\), por ejemplo, se deben probablemente a una sobrecorrección del software ZAP y debemos desecharlas. Esta hipótesis queda reforzada en el caso de H\(\alpha\), ya que la línea que se encuentra inmediatamente a su derecha se corresponde con la emisión de 6584 \AA{} de [N II], que no puede manifestarse en ningún caso como una línea de absorción. Por lo tanto, no podemos afirmar que hayamos encontrado ningún elemento destacable en el espectro. Este era el resultado esperable, al tratarse de una región cercana a una galaxia elíptica en la que no debería existir una gran actividad.
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Línea       & Tipo                       & \(\lambda\) (\AA) \\ \hline
+H\(\alpha\) & \multirow{4}{*}{Emisión/absorción}   & 6563              \\ \cline{1-1} \cline{3-3} 
+H\(\beta\)  &                            & 4861              \\ \cline{1-1} \cline{3-3} 
+H\(\gamma\) &                            & 4340              \\ \cline{1-1} \cline{3-3} 
+H\(\delta\) &                            & 4102              \\ \hline
+CaT         & \multirow{6}{*}{Absorción} & 8498, 8542, 8662  \\ \cline{1-1} \cline{3-3} 
+G           &                            & 4304              \\ \cline{1-1} \cline{3-3} 
+Ca H        &                            & 3934              \\ \cline{1-1} \cline{3-3} 
+Ca K        &                            & 3969              \\ \cline{1-1} \cline{3-3} 
+Mg b        &                            & 5167, 5173, 5184  \\ \cline{1-1} \cline{3-3} 
+Na D        &                            & 5890, 5896        \\ \hline
+\end{tabular}
+\caption{\nota{escribir pie de figura} \label{bandas}}
+\end{table}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[trim={0 0 0 0}, clip, width=1.3\textwidth, angle=-90]{espectromuse.png}
+\caption{\nota{escribir pie de figura}  \label{espectro}}
+\end{figure}
+\noindent
+
+
+\subsection{Propiedades físicas y evolución}
+El modelo de SED propuesto por CIGALE reproduce a la perfección las medidas espectrofotométricas introducidas, como podemos observar en la figura \ref{cigale} (en negro y marrón). En la parte inferior de las gráficas se muestra el residual de cada punto, es decir, la diferencia entre el modelo y los datos de fotometría (la zona de espectroscopía no se incluye, debido a que no tuvimos en cuenta los errores de MUSE al hacer el ajuste). Con él confirmamos que el modelo se ajusta a las observaciones. El \(\chi^{2}_{\nu}\) (especificado en el título de cada gráfica) es, de hecho, muy bajo, señal de que el ajuste podría mantenerse aunque los errores experimentales fuesen mucho menores. Las gráficas también muestran la luminosidad que el modelo le atribuye únicamente a las estrellas, tanto con atenuación (en naranja) como sin ella (en azul), y las contribuciones nebulares (que se manifiestan como líneas estrechas de baja intensidad, en verde) y del polvo (una curva más ancha en la parte más infrarroja del modelo, en rojo). Comparando las gráficas de la shell y del área de referencia no se aprecian diferencias significativas en su forma, si bien en la shell tenemos un flujo más intenso. \par
+
+\begin{figure}[h!]
+\centering
+\includegraphics[trim={0 0 0 0}, clip, width=0.8\textwidth]{cigaleshell.png} \\
+\includegraphics[trim={0 0 0 0}, clip, width=0.8\textwidth]{cigaleref.png}
+\caption{\nota{escribir pie de figura. mencionar que la spec no tiene error}  \label{cigale}}
+\end{figure}
+\noindent
+
+En la tabla \ref{tab:cigale} mostramos los resultados del ajuste de CIGALE para todas las propiedades estudiadas. Como cabría esperar, la shell cuenta con una mayor masa estelar y del gas, aunque la diferencia no es muy pronunciada. Sin embargo, no parece haber diferencias en la metalicidad, la ionización, la edad o la fracción de AGN (esta última, en cualquier caso, es baja, como cabría suponer). La región de referencia parece, de hecho, sufrir un cierto enrojecimiento adicional por el polvo interestelar, aunque de manera poco significativa. No obstante, es la región de la shell la que parece presentar una luminosidad total mayor en el infrarrojo, aunque con una incertidumbre relativamente alta que impide sacar conclusiones definitivas. La diferencia más llamativa se encuentra en la tasa de formación estelar, que es el doble de grande en la shell. 
+
+
+\begin{table}[]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Propiedad                        & Shell                    & Referencia               \\ \hline
+\(M_{stars} (M_{\odot})\)        & \(10,769 \pm 0,022\)     & \(10,510 \pm 0,022\)     \\ \hline
+\(M_{gas} (M_{\odot})\)         & \(10,733 \pm 0,022\)     & \(10,478 \pm 0,022\)     \\ \hline
+\(frac(\text{AGN})\)             & \(0,100 \pm 0,07\)       & \(0,101 \pm 0,07\)       \\ \hline
+E(B-V) (mag)                     & \(0,163 \pm 0,07\)       & \(0,169 \pm 0,07\)       \\ \hline
+\(12+\log{(\text{O}/\text{H})}\) & \(5,998 \pm 0,096\)      & \(5,998 \pm 0,096\)      \\ \hline
+\(Z_{\text{gas}}\)               & \(0,018 \pm 0,003\)      & \(0,018 \pm 0,003\)      \\ \hline
+\(\log{U}\)                      & \(-2,0 \pm 0,082\)       & \(-2,0 \pm 0,082\)       \\ \hline
+SFR \((M_{\odot}/\text{yr})\)                            & \(0,020 \pm 0,004\)      & \(0,011 \pm 0,002\)      \\ \hline
+Edad (Myr)                       & \(9046,797 \pm 111,772\) & \(9046,655 \pm 111,558\) \\ \hline
+\(L_{TIR} (L_{\odot})\)         & \(9,742 \pm 0,216\)      & \(9,524 \pm 0,237\)      \\ \hline
+\end{tabular}
+\caption{\nota{escribir pie de figura} \label{tab:cigale}}
+\end{table}
+
+
+\subsection{Discusión de los resultados}

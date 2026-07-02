@@ -15,10 +15,10 @@ Como se ha descrito en el texto, el procedimiento para medir las propiedades de 
 \end{figure}
 \noindent
 
-Estas dificultades se repiten en el resto de filtros de HST, por lo que, como se menciona en el texto \nota{destacar en el texto}, suponen una demostración palpable de la potencia del telescopio James Webb como herramienta para la caracterización de objetos de bajo brillo superficial. Obviamente, con estas circunstancias el planteamiento original quedó descartado, lo que no impidió obtener resultados significativos. \par
+Estas dificultades se repiten en el resto de filtros de HST, por lo que, como se menciona en el texto, suponen una demostración palpable de la potencia del telescopio James Webb como herramienta para la caracterización de objetos de bajo brillo superficial. Obviamente, con estas circunstancias el planteamiento original quedó descartado, lo que no impidió obtener resultados significativos. \par
 
 \subsection{Métodos alternativos para la eliminación de las contribuciones espurias al flujo de la shell} \label{sec:chefs}
-Otra cuestión que cobraría especial importancia en el caso de que hubiéramos seguido el procedimiento anterior \nota{?} sería la eliminación de las galaxias presentes en la shell principal. Como describimos en el texto, en nuestro análisis optamos por enmascararlas teniendo en cuenta la imagen del filtro que dispersa más su luz \nota{debido a la PSF}. Sin embargo, también existe la posibilidad de modelar su perfil lumínico para, en la medida de lo posible, aislarlo y eliminarlo, y de ese modo reducir el área enmascarada. La forma más directa es hacerlo con GALFIT, aplicando el mismo procedimiento que utilizamos con la BCG sobre la imagen residual de esta. En este caso tenemos en cuenta seis modelos de galaxias al mismo tiempo (es necesario combinar las cuatro galaxias de la zona central en dos modelos), que mostramos, junto con su imagen residual, en la figura \ref{fig:galgalfit}. Vemos un buen acuerdo entre el modelo y la imagen original (figura \ref{jwst277}, inferior), y en la imagen residual reducimos notablemente el área que podría dar problemas. \par
+Otra cuestión relevante en el análisis de la shell, especialmente si se cumplieran las condiciones del anterior apartado, es la eliminación de las galaxias presentes en la shell principal. Como describimos en el texto, en nuestro análisis optamos por enmascararlas. Sin embargo, también existe la posibilidad de modelar su perfil lumínico para, en la medida de lo posible, aislarlo y eliminarlo, y de ese modo reducir el área enmascarada. La forma más directa es hacerlo con GALFIT, aplicando el mismo procedimiento que utilizamos con la BCG sobre la imagen residual de esta. En este caso tenemos en cuenta seis modelos de galaxias al mismo tiempo (es necesario combinar las cuatro galaxias de la zona central en dos modelos), que mostramos, junto con su imagen residual, en la figura \ref{fig:galgalfit}. Vemos un buen acuerdo entre el modelo y la imagen original de F277W (figura \ref{jwst277}, inferior), y en la imagen residual reducimos notablemente el área que podría dar problemas. \par
 
 
 \begin{figure}[h]
@@ -29,7 +29,16 @@ Otra cuestión que cobraría especial importancia en el caso de que hubiéramos 
 \end{figure}
 \noindent
 
-\section{Mapa de color de la BCG sin filtro gaussiano}
+Sin embargo, al ser imposible conseduir una reducción de la BCG con la misma calidad en las imágenes de HST, no es posible llevar a cabo este análisis, ya que las galaxias no quedan bien modeladas. En cualquier caso, tampoco era viable aplicar el procedimiento para el cubo de datos de MUSE. Otra alternativa, más automatizada, que se exploró fue utilizar un algoritmo basado en objetos matemáticos conocidos como CHEFs \citep{jimenez-tejaNewToolImage2012}, utilizado en \citet{jimenez-tejaFirstJointMUSE2024} para estimar la forma de la ICL del cúmulo. En la figura \ref{fig:galchefs} vemos el resultado de aplicar dicho algoritmo a la imagen residual de F277W. Si bien es cierto que el perfil de las galaxias queda más suavizado, el algoritmo extiende la forma de la shell y no está claro que pueda producir un buen análisis. Por ello, dado que finalmente decidimos trabajar con los flujos de las imágenes originales y no es tan necesario maximizar el área de la shell para reducir los errores, optamos por no seguir por esta vía.
+
+\begin{figure}[h]
+\centering
+\includegraphics[trim={0 0 0 0}, clip, width=0.45\textwidth]{galaxiaschefs.png}
+\caption{\nota{escribir pie de figura} 0-0,2 MJy/sr \label{fig:galchefs}}
+\end{figure}
+\noindent
+
+\section{Mapa de color de la BCG sin filtro gaussiano} \label{sec:colorsingauss}
 
 \begin{figure}[h]
 \centering

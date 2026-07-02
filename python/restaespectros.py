@@ -106,35 +106,45 @@ d4000 = [400*unit, "D4000"]
 bandag = [430.4*unit, "G"]
 cah = [393.4*unit, "Ca H"]
 cak = [396.9*unit, "Ca K"]
-mg = [517.5*unit, "Mg"]
+mg = [517.5*unit, "Mg b"]
 na = [589.4*unit, "Na"]
+nii = [658.4*unit, "NII"]
+sii = [671.7*unit, "SIIa"]
+sii2 = [673.1*unit, "SIIb"]
+l1 = [510*unit, "A"]
+l2 = [515*unit, "B"]
+
 
 print(cata, catb, catc)
 
 lineas = []
-lineastop = [hgamma, cak]
-lineasbottom = [bandag, cah, na, halfa, hbeta, hdelta, mg]
+lineastop = [hgamma, hdelta, cah, hbeta, mg, halfa]
+lineasbottom = [bandag, cak, na]
 #print(lineasbottom)
 lineas.extend(lineastop)
 lineas.extend(lineasbottom)
 
-fig4, ax4 = plt.subplots(1, 1, figsize=(10,5))
+fig4, ax4 = plt.subplots(1, 1, figsize=(15,7.5))
 ax4.plot(lbda_shell, spec_shell*1e8, "k-", label="Espectroscopía")
 ylimite = 5
 offset = 0.12
-size = 10
-length = 0.3
+size = 12
+length = 0.12
 maxlambda = 7500
+minlambda = 5000
 anchura = 0.7
 for l in lineastop:
     xaux = np.argmin(np.abs(lbda_shell-l[0]))
     yaux = spec_shell[xaux]*1e8
     print(l[1], yaux)
-    ymax = yaux + length
-    ymin = yaux - length
+    ymax = yaux + 4*length
+    ymin = yaux + length
     if l[0] > maxlambda:
-        ymax+=length
-        ymin-=length
+        ymax+=2*length
+        ymin+=2*length
+    elif l[0] > 5900 and l[0] < 6600:
+        ymax+=0.5*length
+        ymin+=0.5*length
     print(ymax)
     ax4.axvline(l[0], color="red" ,linewidth=anchura, ymax=ymax/ylimite, ymin=ymin/ylimite)
     """offset = 15
@@ -150,11 +160,13 @@ for l in lineasbottom:
     xaux = np.argmin(np.abs(lbda_shell-l[0]))
     yaux = spec_shell[xaux]*1e8
     print(l[1], yaux)
-    ymax = yaux + length
-    ymin = yaux - length
-    if l[0] > maxlambda:
-        ymax+=length
-        ymin-=length
+    ymax = yaux - length
+    ymin = yaux - 4*length
+    """if l[0] > maxlambda:
+        ymax-=length
+        ymin-=length"""
+    if l[0] < minlambda:
+        ymin+=length
     print(ymax)
     ax4.axvline(l[0], color="red" ,linewidth=anchura, ymax=ymax/ylimite, ymin=ymin/ylimite)
     """offset = 15
@@ -171,8 +183,9 @@ ax4_t.set_ticks([l[0] for l in lineastop])
 ax4_t.set_xticklabels([l[1] for l in lineastop], fontsize=10)
 ax4_b.set_ticks([l[0] for l in lineasbottom])
 ax4_b.set_xticklabels([l[1] for l in lineasbottom], fontsize=10)"""
-ax4.set_xlabel("$\\lambda$ (Å)")
-ax4.set_ylabel("Flujo de la shell ($10^{-8} \\: \\text{maggies}$)")
+ax4.set_xlabel("$\\lambda$ (Å)", fontsize=12)
+ax4.set_ylabel("Flujo de la shell ($10^{-8} \\: \\text{maggies}$)", fontsize=12)
 ax4.set_xlim(4500, 9600)
 ax4.set_ylim(0,ylimite)
+ax4.tick_params(labelsize=12)
 #ax.plot(filt_shell, fot_resta, "rs", label="Fotometría")
