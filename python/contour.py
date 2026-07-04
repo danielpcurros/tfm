@@ -479,18 +479,20 @@ def shell_properties(numcont, mascara="simple"):
         ymin = int(line[3])
     x0-=xmin
     y0-=ymin
-    path = f"{path}{tel}{filt}/"
-    mask = fits.open(f"{path}contourmask_{numcont}.fits")[0].data
+    mask = fits.open(f"{path}{tel}{filt}/contourmask_{numcont}.fits")[0].data
 
     if mascara == "simple":
         lims = (680, 740)
         mask[:lims[0], :] = 1
         mask[lims[1]:, :] = 1
+    elif mascara != "":
+        elipse = np.loadtxt(f"{path}{mascara}.txt")
+        for i in elipse:
+            mask[ski.draw.ellipse(i[1], i[0], i[2]*i[3], i[2], rotation=i[4])] = 1
     #print(mask[mask == 0])
     area = mask[mask == 0].size
-    print(area)
 
-    hduim = fits.open(f"{path}mosaic_rxj2129_nircam_f277w_20mas_drz.fits")
+    hduim = fits.open(f"{path}{tel}{filt}/mosaic_rxj2129_nircam_f277w_20mas_drz.fits")
     head = hduim[0].header
     pixelscale = head['CD2_2']*3600.
     #corr = ((pixelscale*u.arcsec)**2.).to(u.steradian)
@@ -505,10 +507,13 @@ def shell_properties(numcont, mascara="simple"):
         rho = np.sqrt(xinic**2 + yinic**2)
         rholist = np.append(rholist, rho)
     
-    rhomedian = np.median(rholist)*pixelscale
-    print(areasec, rhomedian)
+    rhomean = np.mean(rholist)*pixelscale
+    print(areasec, rhomean)
 
-#shell_properties(1)
+#shell_properties(1, "elipses2")
+#shell_properties(1, "elipses3")
+#shell_properties(1, "")
+#shell_properties(0, "")
 
     
 
@@ -1330,23 +1335,23 @@ errparcial_jw = np.array([])
 flujo_fulljwmalo = np.array([])
 err_jwmalo = np.array([])
 for i in jwfiltros:
-    #flujolbdaparcial_jw = flux(("jwst", i), vacio=vac)
-    #flujo_parcialjw = np.append(flujo_parcialjw, flujolbdaparcial_jw[2])
-    #errparcial_jw = np.append(errparcial_jw, flujolbdaparcial_jw[4])
-    #flujo_fulljw = np.append(flujo_fulljw, flux(("jwst", i), "elipses")[2])
-    #flujolbdamalo_jw = flux(("jwst", i), "elipses2", vacio=vac)
-    #flujo_fulljwmalo = np.append(flujo_fulljwmalo, flujolbdamalo_jw[2])
-    #err_jwmalo = np.append(err_jwmalo, flujolbdamalo_jw[4])
+    flujolbdaparcial_jw = flux(("jwst", i), vacio=vac)
+    flujo_parcialjw = np.append(flujo_parcialjw, flujolbdaparcial_jw[2])
+    errparcial_jw = np.append(errparcial_jw, flujolbdaparcial_jw[4])
+    flujo_fulljw = np.append(flujo_fulljw, flux(("jwst", i), "elipses")[2])
+    flujolbdamalo_jw = flux(("jwst", i), "elipses2", vacio=vac)
+    flujo_fulljwmalo = np.append(flujo_fulljwmalo, flujolbdamalo_jw[2])
+    err_jwmalo = np.append(err_jwmalo, flujolbdamalo_jw[4])
     flujolbda_jw = flux(("jwst", i), "elipses3", vacio=vac)
     flujo_fulljw3 = np.append(flujo_fulljw3, flujolbda_jw[2])
     lbda_jw = np.append(lbda_jw, flujolbda_jw[3])
     err_jw = np.append(err_jw, flujolbda_jw[4])
 
-#coc_jw = flujo_fulljw3/flujo_parcialjw
-#errcoc_jw = np.sqrt((err_jw/flujo_parcialjw)**2 + (errparcial_jw*flujo_fulljw3/flujo_parcialjw**2)**2)
+coc_jw = flujo_fulljw3/flujo_parcialjw
+errcoc_jw = np.sqrt((err_jw/flujo_parcialjw)**2 + (errparcial_jw*flujo_fulljw3/flujo_parcialjw**2)**2)
 
-#coc_jwmalo = flujo_fulljwmalo/flujo_parcialjw
-#errcoc_jwmalo = np.sqrt((err_jwmalo/flujo_parcialjw)**2 + (errparcial_jw*flujo_fulljwmalo/flujo_parcialjw**2)**2)
+coc_jwmalo = flujo_fulljwmalo/flujo_parcialjw
+errcoc_jwmalo = np.sqrt((err_jwmalo/flujo_parcialjw)**2 + (errparcial_jw*flujo_fulljwmalo/flujo_parcialjw**2)**2)
 
 hfiltros = np.array([105, 110, 125, 140, 160])
 flujo_parcialh = np.array([])
@@ -1441,22 +1446,22 @@ lbda_muse = muse_shell[:,0]
 fig2, ax2 = plt.subplots(1, 1, figsize=(10, 7))
 #fig2, ax2 = plt.subplots(1, 1, figsize=(8, 8))
 
-estilo = "s"
+estilo = "-s"
 tamaño = 4
-areas = False
+areas = True
 lbda_jw = lbda_jw/1e2
-lbda_h = lbda_h/1e4
-lbda_acs = lbda_acs/1e4
-lbda_muse = lbda_muse/1e4
+#lbda_h = lbda_h/1e4
+#lbda_acs = lbda_acs/1e4
+#lbda_muse = lbda_muse/1e4
 if areas:
     ax2.plot(lbda_jw, coc_jw, f"{estilo}", markersize=tamaño, color="blue", label="Máscara 1")
     ax2.errorbar(lbda_jw, coc_jw, yerr=errcoc_jw, ecolor="blue", fmt="none")
     ax2.plot(lbda_jw, coc_jwmalo, f"{estilo}", markersize=tamaño, color="red", label="Máscara 2")
     ax2.errorbar(lbda_jw, coc_jwmalo, yerr=errcoc_jwmalo, ecolor="red", fmt="none")
-    ax2.plot(lbda_jw, flujo_parcialjw, f"{estilo}", markersize=tamaño, color="black", label="parcial")
-    ax2.plot(lbda_jw, flujo_fulljw, f"{estilo}", markersize=tamaño, color="green", label="conservador")
+    #ax2.plot(lbda_jw, flujo_parcialjw, f"{estilo}", markersize=tamaño, color="black", label="parcial")
+    #ax2.plot(lbda_jw, flujo_fulljw, f"{estilo}", markersize=tamaño, color="green", label="conservador")
     #ax2.plot(lbda_jw, flujo_fulljw2, f"{estilo}", markersize=tamaño, color="red", label="agresivo")
-    ax2.plot(lbda_jw, flujo_fulljw3, f"{estilo}", markersize=tamaño, color="red", label="conservador 2")
+    #ax2.plot(lbda_jw, flujo_fulljw3, f"{estilo}", markersize=tamaño, color="red", label="conservador 2")
 
     ax2.plot(lbda_h, flujo_parcialh, f"{estilo}", markersize=tamaño, color="black", label="parcial")
     ax2.plot(lbda_h, flujo_fullh, f"{estilo}", markersize=tamaño, color="green", label="conservador")
@@ -1488,15 +1493,15 @@ ax2.set_xlabel("$\\lambda$ ($\\mu$m)", fontsize=11)
 #ax2.set_xlabel("$\\lambda$ ($\\mu$m)")
 #ax2.set_ylabel("Flujo (erg s$^{-1}$ cm$^{-2}$ $\\AA^{-1}$ sr$^{-1}$)")
 #ax2.set_ylabel("Flujo (MJy/sr)")
-ax2.set_ylabel("Flujo de la shell ($10^{-8} \\: \\text{maggies}$)", fontsize=11)
-#ax2.set_ylabel("Cociente entre flujos")
+#ax2.set_ylabel("Flujo de la shell ($10^{-8} \\: \\text{maggies}$)", fontsize=11)
+ax2.set_ylabel("Cociente entre flujos")
 ax2.tick_params(labelsize=11)
 #ax2.set_yscale("log")
 #ax2.set_xlim(400,900)
 #ax2.set_ylim(17.5,22)
 ax2.legend(fontsize=11)
-#ax2.legend(loc="lower right")
-#ax2.set_ylim(0, 8.5)"""
+ax2.legend(loc="lower right")
+ax2.set_ylim(5, 8.5)"""
 
 #ax[1].plot(lbda_jw, flujo_parcial/np.max(flujo_parcial), f"{estilo}", color="red", label="parcial")
 #ax[1].plot(lbda_jw, flujo_full/flujo_parcial, ".-", color="blue", label="total/parcial")
@@ -1675,6 +1680,15 @@ ax4.plot(line2[:,0], line2[:,1], "-", color=collines, linewidth=2)
 for arc in arcs:
     ax4.plot(arc[:,0], arc[:,1], "-", color=collines, linewidth=1)
 
+
+rotar = 180
+line1, line2, arcs, colores_espejo, dist_espejo = mihos(435, 625, 60+rotar, 90+rotar)
+
+ax4.plot(line1[:,0], line1[:,1], "-", color=collines, linewidth=2)
+ax4.plot(line2[:,0], line2[:,1], "-", color=collines, linewidth=2)
+for arc in arcs:
+    ax4.plot(arc[:,0], arc[:,1], "-", color=collines, linewidth=1)
+
 #for i in range(len(circles)):
 #    ax4.plot(circles[i][1], circles[i][0], ".", color="black", markersize=1)
 #    size = 16
@@ -1703,9 +1717,11 @@ ax6.set_xticks([])
 ax6.set_yticks([])"""
 
 fig7, ax7 = plt.subplots(1, 1, figsize=(10, 7))
-ax7.plot(dist_ref, colores_ref, "gs", label="Referencia")
-ax7.plot(dist_shell, colores_shell, "ks", label="Sector de la shell")
-ax7.plot(dist_shell[5:10], colores_shell[5:10], "rs", label="Shell")
+ax7.plot(dist_ref, colores_ref, "s", color="g", label="Sector de referencia")
+ax7.plot(dist_espejo, colores_espejo, "s", color="b", label="Sector espejo")
+ax7.plot(dist_shell, colores_shell, "s", color="k", label="Sector de la shell")
+ax7.plot(dist_shell[5:10], colores_shell[5:10], "s", color="r", label="Shell principal")
+ax7.plot(dist_espejo[-2:], colores_espejo[-2:], "s", color="magenta", label="Shell secundaria")
 
 ax7.set_xlabel("Distancia galactocéntrica (kpc)", fontsize=11)
 ax7.set_ylabel("Índice de color F435W - F625W ($m_{AB}$)", fontsize=11)
